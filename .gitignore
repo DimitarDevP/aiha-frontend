@@ -30,3 +30,7 @@ yarn-error.log*
 # Optional eslint cache
 .eslintcache
 **/.vscode
+
+# Mobile development folders
+/android
+/ios
