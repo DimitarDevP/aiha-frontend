@@ -7,7 +7,7 @@ export interface ApiConfig {
 
 // Development configuration
 const devConfig: ApiConfig = {
-  baseUrl: 'http://localhost:8000/api',
+  baseUrl: 'http://localhost:8000/',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ const devConfig: ApiConfig = {
 
 // Production configuration
 const prodConfig: ApiConfig = {
-  baseUrl: 'https://your-production-api.com/api',
+  baseUrl: 'https://your-production-api.com/',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
