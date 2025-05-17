@@ -1,35 +1,42 @@
 import { useHistory } from "react-router-dom";
+import { IonIcon } from '@ionic/react';
+import { alertCircleOutline, chatbubbleOutline, personOutline, newspaperOutline, lockClosedOutline } from 'ionicons/icons';
 
 const cards = [
   {
     title: "Be Aware",
-    image: "/src/assets/images/be-aware.png",
+    icon: alertCircleOutline,
+    color: "bg-amber-100 text-amber-600",
     text: "Get important health alerts and warnings for your local area",
     route: "/Be-Aware",
   },
   {
-    title: "AIHA(Artificial Intelligence Health Assistant)",
-    image: "/src/assets/images/aiha.png",
+    title: "AIHA",
+    icon: chatbubbleOutline,
+    color: "bg-purple-100 text-purple-600",
     text: "Get personalized health advice from our AI assistant",
     route: "/Chat",
   },
   {
     title: "My Profile",
-    image: "/src/assets/images/my-profile.png",
+    icon: personOutline,
+    color: "bg-teal-100 text-teal-600",
     text: "Manage your personal information and settings",
     route: "/Profile",
-      },
-    {
-        title: "News",
-        image: "/static/Health-News.jpg",
-        text: "Get the latest health news and updates",
-        route: "/NewsCard",
-    },   
-      {
-        title: "User Vault",
-        image: "/src/assets/images/vault.png",
-        text: "Securely store and manage your personal health records",
-        route: "/Vault",
+  },
+  {
+    title: "News",
+    icon: newspaperOutline,
+    color: "bg-blue-100 text-blue-600",
+    text: "Get the latest health news and updates",
+    route: "/NewsCard",
+  },
+  {
+    title: "User Vault",
+    icon: lockClosedOutline,
+    color: "bg-indigo-100 text-indigo-600",
+    text: "Securely store your personal health records",
+    route: "/Vault",
   },
 ];
 
@@ -41,34 +48,26 @@ const Home: React.FC = () => {
   };
 
   return (
-    <main className="flex flex-col items-center py-4 md:py-8 px-2 md:px-4 w-full">
-      {/*<h1 className="text-2xl font-bold mb-4 md:mb-6 text-center">Home</h1>*/}
-
-      <div className="grid grid-cols-2 gap-3 md:gap-5 w-full max-w-3xl px-2 mx-auto">
+    <main className="flex flex-col items-center py-4 md:py-6 px-4 w-full bg-indigo-50 min-h-screen">
+      <div className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-3xl">
         {cards.map((card) => (
           <div
             key={card.title}
             onClick={() => handleCardClick(card.route)}
-            className="cursor-pointer rounded-lg md:rounded-xl shadow-md md:shadow-lg bg-white hover:shadow-xl transition-shadow w-full flex flex-col h-full overflow-hidden"
+            className="cursor-pointer rounded-xl shadow-md bg-white hover:shadow-lg transition-all duration-200 flex flex-col h-full overflow-hidden border border-indigo-100 hover:border-indigo-200"
           >
-            {/* Image at top */}
-            <div className="w-full h-[120px] md:h-[140px] bg-gray-100 overflow-hidden">
-              <img
-                src={card.image || `https://via.placeholder.com/400x300?text=${card.title}`}
-                alt={card.title}
-                className="w-full h-full object-cover"
-              />
+            {/* Icon with colored background */}
+            <div className={`w-full flex items-center justify-center p-4 ${card.color}`}>
+              <IonIcon icon={card.icon} className="text-3xl" />
             </div>
             
-            {/* Content area with title and text */}
-            <div className="p-2 md:p-3 flex flex-col">
-              <h2 className="text-sm md:text-base font-semibold text-center mb-1 text-indigo-700">{card.title}</h2>
-              <p className="text-xs text-indigo-500 text-center line-clamp-2">{card.text}</p>
+            {/* Content area */}
+            <div className="p-3 md:p-4 flex flex-col items-center text-center">
+              <h2 className="text-sm md:text-base font-semibold mb-1 text-indigo-900">{card.title}</h2>
+              <p className="text-xs text-indigo-600 line-clamp-2">{card.text}</p>
             </div>
           </div>
         ))}
-        
-
       </div>
     </main>
   );

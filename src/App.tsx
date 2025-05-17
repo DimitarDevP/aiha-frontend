@@ -11,8 +11,8 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { useSelector } from 'react-redux';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import Chatbot from './components/Chatbot/Chatbot';
+import Vault from './components/Vault/Vault';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import './app.css';
@@ -78,7 +78,7 @@ const App: React.FC = () => {
             path="/Chat"
             render={() => (
               <Wrapper>
-                <Tab2 />
+                <Chatbot />
               </Wrapper>
             )}
           />
@@ -105,7 +105,7 @@ const App: React.FC = () => {
             path="/Vault"
             render={() => (
               <Wrapper>
-                <Tab3 />
+                <Vault />
               </Wrapper>
               )}
             />
