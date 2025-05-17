@@ -92,7 +92,7 @@ const App: React.FC = () => (
           />
 
           {/* Redirect root to tab1 */}
-          <Route exact path="/" render={() => <Redirect to="/tab1" />} />
+          <Route exact path="/" render={() => <Redirect to="/Be-Aware" />} />
 
         </IonRouterOutlet>
       </IonTabs>
