@@ -44,7 +44,7 @@ const App: React.FC = () => (
         <IonRouterOutlet>
           <Route
             exact
-            path="/tab1"
+            path="/tab3"
             render={() => (
               <Wrapper>
                 <UserInfo />
@@ -59,7 +59,7 @@ const App: React.FC = () => (
             </Wrapper>
           </Route>
 
-          <Route path="/tab3">
+          <Route path="/tab1">
           <Wrapper>
             <Tab3 />
           </Wrapper>
