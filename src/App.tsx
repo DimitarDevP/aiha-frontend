@@ -74,7 +74,9 @@ const App: React.FC = () => (
           )}
         />
 
-    <Route exact path="/" render={() => <Redirect to="/tab1" />} />
+    <Route exact path="/" 
+    render={() => 
+    <Redirect to="/tab1" />} />
   </IonRouterOutlet>
 
         
