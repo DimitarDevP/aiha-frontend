@@ -10,7 +10,6 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
@@ -32,6 +31,7 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import Wrapper from './components/Wrapper';
 import UserInfo from './components/User/UserInfo';
+import BeAware from './components/BeAware';
 
 
 setupIonicReact();
@@ -41,34 +41,42 @@ const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
       <IonTabs>
-        <IonRouterOutlet>
-          <Route
-            exact
-            path="/tab3"
-            render={() => (
-              <Wrapper>
-                <UserInfo />
-                <Tab1 />
-              </Wrapper>
-            )}
-          />
-          
-          <Route exact path="/tab2">
-          <Wrapper>
-            <Tab2 />
+       <IonRouterOutlet>
+        <Route
+          exact
+          path="/tab1"
+          render={() => (
+            <Wrapper>
+              <BeAware />
+              <Tab1 />
             </Wrapper>
-          </Route>
+          )}
+        />
 
-          <Route path="/tab1">
-          <Wrapper>
-            <Tab3 />
-          </Wrapper>
-          </Route>
+        <Route
+          exact
+          path="/tab2"
+          render={() => (
+            <Wrapper>
+              <Tab2 />
+            </Wrapper>
+          )}
+        />
 
-          <Route exact path="/">
-            <Redirect to="/tab1" />
-          </Route>
-        </IonRouterOutlet>
+        <Route
+          exact
+          path="/tab3"
+          render={() => (
+            <Wrapper>
+              <UserInfo />
+              <Tab3 />
+            </Wrapper>
+          )}
+        />
+
+    <Route exact path="/" render={() => <Redirect to="/tab1" />} />
+  </IonRouterOutlet>
+
         
       </IonTabs>
     </IonReactRouter>
