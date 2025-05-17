@@ -1,4 +1,3 @@
-// components/Heatmap.tsx
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet.heat';
@@ -19,8 +18,8 @@ interface HeatmapProps {
   locked?: boolean;
 }
 
-const Heatmap: React.FC<HeatmapProps> = ({ 
-  points, 
+const Heatmap: React.FC<HeatmapProps> = ({
+  points,
   center = [48.8566, 2.3522],
   zoom = 5,
   height = '300px',
@@ -28,66 +27,78 @@ const Heatmap: React.FC<HeatmapProps> = ({
   locked = true
 }) => {
   const mapRef = useRef<L.Map | null>(null);
-  const heatLayerRef = useRef<any>(null);
+  const heatLayerRef = useRef<L.Layer | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (points.length === 0) return;
+    if (!containerRef.current || points.length === 0) return;
 
-    // Initialize the map
-    mapRef.current = L.map('heatmap-container', {
-      center,
-      zoom,
-      zoomControl: false,
-      dragging: !locked,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-      boxZoom: false,
-      keyboard: false,
-      touchZoom: false
-    });
+    // Delay to wait for parent layout (especially modals)
+    setTimeout(() => {
+      if (mapRef.current) return; // Prevent reinitialization
 
-    // Add the OpenStreetMap tiles with a more subtle style
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      opacity: 0.7
-    }).addTo(mapRef.current);
-
-    // Prepare heatmap data with enhanced intensity scaling
-    const maxIntensity = Math.max(...points.map(p => p.intensity || 1), 1);
-    const heatData = points.map(point => [
-      point.lat, 
-      point.lng, 
-      (point.intensity || 1) / maxIntensity * 0.8
-    ] as [number, number, number]);
-
-    // Add heatmap layer with weather-like gradient
-    heatLayerRef.current = (L as any).heatLayer(heatData, {
-      radius: 25,
-      blur: 20,
-      maxZoom: 9,
-      gradient: {
-        0.1: 'rgba(33, 102, 172, 0.2)',
-        0.3: 'rgba(103, 169, 207, 0.4)',
-        0.5: 'rgba(209, 229, 240, 0.6)',
-        0.7: 'rgba(253, 219, 199, 0.8)',
-        0.9: 'rgba(239, 138, 98, 0.9)',
-        1.0: 'rgba(178, 24, 43, 1)'
-      },
-      minOpacity: 0.3
-    }).addTo(mapRef.current);
-
-    // Add Europe bounding box
-    const europeBounds = L.latLngBounds(
-      L.latLng(35, -25),
-      L.latLng(71, 40)
-    );
-    
-    if (locked) {
-      mapRef.current.setMaxBounds(europeBounds);
-      mapRef.current.on('drag', () => {
-        mapRef.current!.panInsideBounds(europeBounds, { animate: false });
+      const map = L.map(containerRef.current!, {
+        center,
+        zoom,
+        zoomControl: false,
+        dragging: !locked,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false,
+        touchZoom: false
       });
-    }
+
+      mapRef.current = map;
+
+      // Add base tile layer
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        opacity: 0.7
+      }).addTo(map);
+
+      // Add label layer
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        opacity: 0.5
+      }).addTo(map);
+
+      const heatData = points.map(point => [
+        point.lat,
+        point.lng,
+        point.intensity || 0.5
+      ] as [number, number, number]);
+
+      const heatmapGradient = {
+        0.1: 'rgba(59, 130, 246, 0.2)',   // blue-500
+        0.3: 'rgba(234, 179, 8, 0.4)',    // yellow-500
+        0.6: 'rgba(245, 158, 11, 0.6)',   // amber-500
+        0.8: 'rgba(239, 68, 68, 0.8)',    // red-500
+        1.0: 'rgba(185, 28, 28, 1)'       // red-700
+      };
+
+      heatLayerRef.current = (L as any).heatLayer(heatData, {
+        radius: 25,
+        blur: 20,
+        maxZoom: 9,
+        gradient: heatmapGradient,
+        minOpacity: 0.3
+      }).addTo(map);
+
+      const europeBounds = L.latLngBounds(L.latLng(35, -25), L.latLng(71, 40));
+
+      if (locked) {
+        map.setMaxBounds(europeBounds);
+        map.on('drag', () => {
+          map.panInsideBounds(europeBounds, { animate: false });
+        });
+      }
+
+      // Force Leaflet to size correctly
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 100);
+    }, 50);
 
     return () => {
       if (mapRef.current) {
@@ -99,15 +110,15 @@ const Heatmap: React.FC<HeatmapProps> = ({
   }, [points, center, zoom, locked]);
 
   return (
-    <div 
-      id="heatmap-container" 
-      style={{ 
-        height, 
+    <div
+      ref={containerRef}
+      style={{
+        height,
         width,
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-        overflow: 'hidden'
-      }} 
+        borderRadius: '12px',
+        overflow: 'hidden',
+        backgroundColor: '#f8fafc'
+      }}
     />
   );
 };
