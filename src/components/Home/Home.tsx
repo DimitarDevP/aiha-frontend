@@ -3,16 +3,16 @@ import { useHistory } from "react-router-dom";
 const cards = [
   {
     title: "Be Aware",
-    image: "",
+    image: "/src/assets/images/be-aware.png",
     route: "/Be-Aware",
   },
   {
     title: "Chat with AI",
-    image: "",
+    image: "/src/assets/images/aiha.png",
     route: "/Chat",
   },
   {
-    title: "Monitoring",
+    title: "My Profile",
     image: "",
     route: "/monitoring",
   },
