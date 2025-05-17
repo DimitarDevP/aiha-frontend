@@ -17,13 +17,13 @@ const cards = [
     title: "My Profile",
     image: "/src/assets/images/my-profile.png",
     text: "Manage your personal information and settings",
-    route: "/UserInfo",
+    route: "/Profile",
       },
       {
-    title: "Something",
-    image: "",
-    text: "Explore additional features and tools",
-    route: "/something",
+        title: "User Vault",
+        image: "/src/assets/images/vault.png",
+        text: "Securely store and manage your personal health records",
+        route: "/Vault",
   },
 ];
 
@@ -56,8 +56,8 @@ const Home: React.FC = () => {
             
             {/* Content area with title and text */}
             <div className="p-2 md:p-3 flex flex-col">
-              <h2 className="text-sm md:text-base font-semibold text-center mb-1">{card.title}</h2>
-              <p className="text-xs text-gray-600 text-center line-clamp-2">{card.text}</p>
+              <h2 className="text-sm md:text-base font-semibold text-center mb-1 text-indigo-700">{card.title}</h2>
+              <p className="text-xs text-indigo-500 text-center line-clamp-2">{card.text}</p>
             </div>
           </div>
         ))}

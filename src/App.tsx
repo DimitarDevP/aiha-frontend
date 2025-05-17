@@ -12,6 +12,7 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import { useSelector } from 'react-redux';
 import Tab2 from './pages/Tab2';
+import Tab3 from './pages/Tab3';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import './app.css';
@@ -52,49 +53,57 @@ const App: React.FC = () => {
         <IonTabs>
           <IonRouterOutlet>
             <Switch>
-              {/* Tabs */}
-              <Route
-                exact
-                path="/Home"
-                render={() => (
-                  <Wrapper>
-                    <Home />
-                  </Wrapper>
-                )}
-              />
-              <Route
-                exact
-                path="/Be-Aware"
-                render={() => (
-                  <Wrapper>
-                    <BeAware />
-                  </Wrapper>
-                )}
-              />
-              <Route
-                exact
-                path="/Chat"
-                render={() => (
-                  <Wrapper>
-                    <Tab2 />
-                  </Wrapper>
-                )}
-              />
-              <Route
-                exact
-                path="/Profile"
-                render={() => (
-                  <Wrapper>
-                    <UserInfo />
-                  </Wrapper>
-                )}
-              />
-              
-              {/* Auth routes with redirect when authenticated */}
+          {/* Tabs */}
+          <Route
+            exact
+            path="/Home"
+            render={() => (
+              <Wrapper>
+                  <Home />
+              </Wrapper>
+            )}
+          />
+          <Route
+            exact
+            path="/Be-Aware"
+            render={() => (
+              <Wrapper>
+                  <BeAware />
+              </Wrapper>
+            )}
+          />
+          <Route
+            exact
+            path="/Chat"
+            render={() => (
+              <Wrapper>
+                <Tab2 />
+              </Wrapper>
+            )}
+          />
+          <Route
+            exact
+            path="/Profile"
+            render={() => (
+              <Wrapper>
+                  <UserInfo />
+              </Wrapper>
+            )}
+          />
+          <Route
+            exact
+            path="/Vault"
+            render={() => (
+              <Wrapper>
+                <Tab3 />
+              </Wrapper>
+              )}
+            />
+            {/* Auth routes with redirect when authenticated */}
               <Route
                 exact
                 path="/login"
-                render={() => 
+                render={() =>
                   isAuthenticated ? (
                     <Redirect to="/Home" />
                   ) : (
@@ -107,7 +116,7 @@ const App: React.FC = () => {
               <Route
                 exact
                 path="/register"
-                render={() => 
+                render={() =>
                   isAuthenticated ? (
                     <Redirect to="/Home" />
                   ) : (
@@ -117,10 +126,10 @@ const App: React.FC = () => {
                   )
                 }
               />
-              
+
               {/* Redirect root to Home */}
               <Route exact path="/" render={() => <Redirect to="/Home" />} />
-              
+
               {/* Catch-all route for non-existent paths */}
               <Route render={() => <Redirect to="/Home" />} />
             </Switch>

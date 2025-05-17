@@ -13,6 +13,8 @@ function NavigationView() {
       return 'AIHA';
     } else if (path === '/Profile') {
       return 'My Profile';
+    } else if (path === '/Vault') {
+      return 'User Vault';
     } else if (path === '/login') {
       return 'Sign In';
     } else if (path === '/register') {
@@ -28,13 +30,13 @@ function NavigationView() {
   return (
     <div className="flex justify-between items-center px-6 py-4 bg-gray-100 shadow z-[100000]">
       <div className="flex items-center gap-2">
-        <img 
+        <img
           src="static/logo.png"
-          alt="App Logo" 
+          alt="App Logo"
           className="h-14"
         />
         {pageTitle && (
-          <span className="text-lg font-semibold">
+          <span className="text-2xl font-semibold text-indigo-700">
             {pageTitle}
           </span>
         )}
