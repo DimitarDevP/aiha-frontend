@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 
 const UserProfileForm = () => {
   const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
     illnesses: '',
     familyHistory: '',
     allergies: '',
@@ -22,6 +24,7 @@ const UserProfileForm = () => {
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form Submitted:', formData);
@@ -30,6 +33,37 @@ const UserProfileForm = () => {
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-white shadow rounded space-y-4">
       <h2 className="text-xl font-bold mb-4">User Health Profile</h2>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+            First Name
+          </label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            placeholder="First Name"
+            value={formData.firstName}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
+        <div>
+          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+            Last Name
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            placeholder="Last Name"
+            value={formData.lastName}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
+      </div>
 
       <textarea
         name="illnesses"
