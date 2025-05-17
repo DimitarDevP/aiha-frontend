@@ -45,7 +45,7 @@ const App: React.FC = () => (
           {/* Tabs */}
           <Route
             exact
-            path="/tab3"
+            path="/Be-Aware"
             render={() => (
               <Wrapper>
                   <BeAware />
@@ -54,7 +54,7 @@ const App: React.FC = () => (
           />
           <Route
             exact
-            path="/tab2"
+            path="/Chat"
             render={() => (
               <Wrapper>
                 <Tab2 />
@@ -63,7 +63,7 @@ const App: React.FC = () => (
           />
           <Route
             exact
-            path="/tab1"
+            path="/Profile"
             render={() => (
               <Wrapper>
                   <UserInfo />
