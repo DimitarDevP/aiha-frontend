@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { persistReducer } from "redux-persist";
+import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
 import { 
   loginUser, 
@@ -8,7 +8,6 @@ import {
   refreshToken,
 } from "./userAuthThunk";
 
-// Define more specific types
 type AuthStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
 interface User {
@@ -17,6 +16,15 @@ interface User {
   name: string | null;
   role: string | null;
   isVerified: boolean;
+  date_of_birth?: string | null;
+  height?: number | null;
+  weight?: number | null;
+  illnesses?: string | null;
+  allergies?: string | null;
+  addictions?: string | null;
+  family_history?: string | null;
+  location_lat?: number | null;
+  location_lng?: number | null;
 }
 
 interface UserState {
@@ -35,6 +43,15 @@ const initialState: UserState = {
     name: null,
     role: null,
     isVerified: false,
+    date_of_birth: null,
+    height: null,
+    weight: null,
+    illnesses: null,
+    allergies: null,
+    addictions: null,
+    family_history: null,
+    location_lat: null,
+    location_lng: null,
   },
   access_token: null,
   refresh_token: null,
@@ -47,6 +64,14 @@ const userAuthSlice = createSlice({
   name: 'userAuth',
   initialState,
   reducers: {
+    manualLogout: (state) => {
+    state.isAuthenticated = false;
+    state.access_token = null;
+    state.refresh_token = null;
+    state.user = initialState.user;
+    state.status = 'idle';
+    state.error = null;
+  },
     clearAuthError: (state) => {
       state.error = null;
       state.status = 'idle';
@@ -54,65 +79,72 @@ const userAuthSlice = createSlice({
     resetAuthStatus: (state) => {
       state.status = 'idle';
     },
-    // Add a reducer to update user profile without full refresh
     updateUserProfile: (state, action: PayloadAction<Partial<User>>) => {
       state.user = { ...state.user, ...action.payload };
+    },
+    updateUserLocation: (state, action: PayloadAction<{ lat: number; lng: number }>) => {
+      state.user.location_lat = action.payload.lat;
+      state.user.location_lng = action.payload.lng;
     }
   },
-  extraReducers: (builder) => {
-    // Helper function for common pending state
-    const handlePending = (state: UserState) => {
+  // In your userAuthSlice.ts
+extraReducers: (builder) => {
+  builder
+    // Login
+    .addCase(loginUser.pending, (state) => {
       state.status = 'loading';
       state.error = null;
-    };
-
-    // Helper function for common error state
-    const handleRejected = (state: UserState, action: any) => {
+    })
+    .addCase(loginUser.fulfilled, (state, action) => {
+      state.status = 'succeeded';
+      state.isAuthenticated = true;
+      state.access_token = action.payload.access_token;
+      state.refresh_token = action.payload.refresh_token;
+      state.user = action.payload.user;
+    })
+    .addCase(loginUser.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.payload as string || 'Operation failed';
-    };
-
-    // Login
-    builder.addCase(loginUser.pending, handlePending);
-    builder.addCase(loginUser.fulfilled, (state, { payload }) => {
-      state.user = payload.user;
-      state.access_token = payload.access_token;
-      state.refresh_token = payload.refresh_token;
-      state.isAuthenticated = true;
-      state.status = 'succeeded';
-    });
-    builder.addCase(loginUser.rejected, (state, action) => {
-      handleRejected(state, action);
+      state.error = action.payload as string;
       state.isAuthenticated = false;
-    });
-
+    })
+    
     // Register
-    builder.addCase(registerUser.pending, handlePending);
-    builder.addCase(registerUser.fulfilled, (state, { payload }) => {
-      state.user = payload.user;
+    .addCase(registerUser.pending, (state) => {
+      state.status = 'loading';
+      state.error = null;
+    })
+    .addCase(registerUser.fulfilled, (state, action) => {
       state.status = 'succeeded';
-    });
-    builder.addCase(registerUser.rejected, handleRejected);
-
-    // Logout
-    builder.addCase(logoutUser.pending, handlePending);
-    builder.addCase(logoutUser.fulfilled, () => initialState);
-    builder.addCase(logoutUser.rejected, handleRejected);
-
-    // Refresh Token
-    builder.addCase(refreshToken.pending, handlePending);
-    builder.addCase(refreshToken.fulfilled, (state, { payload }) => {
-      state.access_token = payload.access_token;
-      state.refresh_token = payload.refresh_token;
       state.isAuthenticated = true;
-      state.status = 'succeeded';
-    });
-    builder.addCase(refreshToken.rejected, (state, action) => {
-      handleRejected(state, action);
+      state.access_token = action.payload.access_token;
+      state.refresh_token = action.payload.refresh_token;
+      state.user = action.payload.user;
+    })
+    .addCase(registerUser.rejected, (state, action) => {
+      state.status = 'failed';
+      state.error = action.payload as string;
       state.isAuthenticated = false;
+    })
+    
+    // Logout
+    .addCase(logoutUser.fulfilled, (state) => {
+      state.isAuthenticated = false;
+      state.access_token = null;
+      state.refresh_token = null;
+      state.user = initialState.user;
+    })
+    
+    // Refresh token
+    .addCase(refreshToken.fulfilled, (state, action) => {
+      state.access_token = action.payload.access_token;
+      state.isAuthenticated = true;
+    })
+    .addCase(refreshToken.rejected, (state) => {
+      state.isAuthenticated = false;
+      state.access_token = null;
+      state.refresh_token = null;
     });
-
-  }
+}
 });
 
 const persistConfig = {
@@ -120,7 +152,6 @@ const persistConfig = {
   storage,
   whitelist: ['user', 'access_token', 'refresh_token', 'isAuthenticated'],
   blacklist: ['status', 'error'],
-  // Optional: Add version to handle future migrations
   version: 1,
 };
 
@@ -129,10 +160,11 @@ export const persistedUserAuthReducer = persistReducer(persistConfig, userAuthSl
 export const { 
   clearAuthError, 
   resetAuthStatus,
-  updateUserProfile 
+  updateUserProfile,
+  updateUserLocation,
+  manualLogout
 } = userAuthSlice.actions;
 
-// Export the type for the root state
 export type { UserState };
 
 export default persistedUserAuthReducer;

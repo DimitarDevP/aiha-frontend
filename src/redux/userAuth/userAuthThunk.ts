@@ -12,6 +12,15 @@ interface RegisterData {
   name: string;
   email: string;
   password: string;
+  date_of_birth?: string;
+  height?: number;
+  weight?: number;
+  illnesses?: string;
+  allergies?: string;
+  addictions?: string;
+  family_history?: string;
+  location_lat: number;
+  location_lng: number;
   [key: string]: any;
 }
 
@@ -22,6 +31,15 @@ interface AuthResponse {
     name: string;
     role: string;
     isVerified: boolean;
+    date_of_birth?: string;
+    height?: number;
+    weight?: number;
+    illnesses?: string;
+    allergies?: string;
+    addictions?: string;
+    family_history?: string;
+    location_lat?: number;
+    location_lng?: number;
   };
   access_token: string;
   refresh_token: string;
@@ -46,7 +64,15 @@ export const loginUser = createAsyncThunk(
   "userAuth/loginUser",
   async (credentials: LoginCredentials, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post<AuthResponse>("/auth/login", credentials);
+      const formData = new FormData();
+      formData.append("email", credentials.email);
+      formData.append("password", credentials.password);
+
+      const response = await apiClient.post<AuthResponse>("/users/auth/login", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Explicitly set as form-data
+        },
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(handleApiError(error));
@@ -58,10 +84,29 @@ export const registerUser = createAsyncThunk(
   "userAuth/registerUser",
   async (userData: RegisterData, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post<{ user: AuthResponse['user'] }>(
-        "/auth/register", 
-        userData
-      );
+      const formData = new FormData();
+
+      // Append required fields
+      formData.append("name", userData.name);
+      formData.append("email", userData.email);
+      formData.append("password", userData.password);
+      formData.append("location_lat", String(userData.location_lat));
+      formData.append("location_lng", String(userData.location_lng));
+
+      // Append optional fields if they exist
+      if (userData.date_of_birth) formData.append("date_of_birth", userData.date_of_birth);
+      if (userData.height) formData.append("height", String(userData.height));
+      if (userData.weight) formData.append("weight", String(userData.weight));
+      if (userData.illnesses) formData.append("illnesses", userData.illnesses);
+      if (userData.allergies) formData.append("allergies", userData.allergies);
+      if (userData.addictions) formData.append("addictions", userData.addictions);
+      if (userData.family_history) formData.append("family_history", userData.family_history);
+
+      const response = await apiClient.post<AuthResponse>("/users/auth/register", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Explicitly set as form-data
+        },
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(handleApiError(error));
