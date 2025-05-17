@@ -33,6 +33,7 @@ import './theme/variables.css';
 import Wrapper from './components/Wrapper';
 import UserInfo from './components/User/UserInfo';
 import BeAware from './components/BeAware';
+import Home from './components/Home/Home';
 
 setupIonicReact();
 
@@ -43,6 +44,15 @@ const App: React.FC = () => (
         <IonRouterOutlet>
 
           {/* Tabs */}
+          <Route
+            exact
+            path="/Home"
+            render={() => (
+              <Wrapper>
+                  <Home />
+              </Wrapper>
+            )}
+          />
           <Route
             exact
             path="/Be-Aware"
@@ -92,7 +102,7 @@ const App: React.FC = () => (
           />
 
           {/* Redirect root to tab1 */}
-          <Route exact path="/" render={() => <Redirect to="/tab1" />} />
+          <Route exact path="/" render={() => <Redirect to="/Home" />} />
 
         </IonRouterOutlet>
       </IonTabs>
