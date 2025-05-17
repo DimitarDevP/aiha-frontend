@@ -133,6 +133,7 @@ const App: React.FC = () => {
 
               {/* Catch-all route for non-existent paths */}
               <Route render={() => <Redirect to="/Home" />} />
+            </Switch>
           </IonRouterOutlet>
         </IonTabs>
       </IonReactRouter>
