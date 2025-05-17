@@ -29,7 +29,7 @@ function NavigationView() {
 
   return (
     <div className="flex justify-between items-center px-6 py-4 bg-gray-100 shadow z-[100000]">
-      <div className="text-lg font-semibold">{getPageTitle()}</div>
+      <div className="text-2xl font-semibold text-indigo-700">{getPageTitle()}</div>
       <User />
     </div>
   );
