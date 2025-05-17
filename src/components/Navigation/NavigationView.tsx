@@ -1,6 +1,4 @@
-import React from 'react'
 import User from '../User/User'
-import { IonToolbar } from '@ionic/react'
 
 function NavigationView() {
   return (

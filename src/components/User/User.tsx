@@ -19,9 +19,23 @@ function User() {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-[1000]">
-          <NavLink to="/tab1" className="block text-black w-full text-left px-4 py-2 hover:bg-gray-100">User Profile</NavLink>
-          <NavLink to="/tab2" className="block text-black w-full text-left px-4 py-2 hover:bg-gray-100">My Activity</NavLink>
-          <NavLink to="/tab3" className="block text-black w-full text-left px-4 py-2 hover:bg-gray-100">Log Out</NavLink>
+          <NavLink to="/tab1"
+            onClick = {() => setIsOpen(false)}
+            className="block text-black w-full text-left px-4 py-2 hover:bg-gray-100">
+            My profile
+           </NavLink>
+          <NavLink 
+          to="/tab2" 
+          onClick={() => setIsOpen(false)} 
+          className="block text-black w-full text-left px-4 py-2 hover:bg-gray-100">
+            My Activity
+            </NavLink>
+          <NavLink 
+          to="/tab3" 
+          onClick={() => setIsOpen(false)} 
+          className="block text-black w-full text-left px-4 py-2 hover:bg-gray-100">
+            Log Out
+            </NavLink>
         </div>
       )}
     </div>

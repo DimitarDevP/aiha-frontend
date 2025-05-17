@@ -30,33 +30,41 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import './theme/variables.css';
-import NavigationView from './components/Navigation/NavigationView';
 import Wrapper from './components/Wrapper';
-
+import UserInfo from './components/User/UserInfo';
 
 
 setupIonicReact();
 
 const App: React.FC = () => (
+  
   <IonApp>
     <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route exact path="/tab1">
-          <Wrapper>
-            <Tab1 />
-          </Wrapper>
-          </Route>
+          <Route
+            exact
+            path="/tab1"
+            render={() => (
+              <Wrapper>
+                <UserInfo />
+                <Tab1 />
+              </Wrapper>
+            )}
+          />
+          
           <Route exact path="/tab2">
           <Wrapper>
             <Tab2 />
             </Wrapper>
           </Route>
+
           <Route path="/tab3">
           <Wrapper>
             <Tab3 />
           </Wrapper>
           </Route>
+
           <Route exact path="/">
             <Redirect to="/tab1" />
           </Route>
