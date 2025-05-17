@@ -93,6 +93,15 @@ const App: React.FC = () => {
           />
           <Route
             exact
+            path="/NewsCard"
+            render={() => (
+              <Wrapper>
+                  <NewsCard />
+              </Wrapper>
+            )}
+          />
+          <Route
+            exact
             path="/Vault"
             render={() => (
               <Wrapper>

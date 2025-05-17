@@ -20,6 +20,12 @@ const cards = [
     text: "Manage your personal information and settings",
     route: "/Profile",
       },
+    {
+        title: "News",
+        image: "",
+        text: "Get the latest health news and updates",
+        route: "/NewsCard",
+    },   
       {
         title: "User Vault",
         image: "/src/assets/images/vault.png",
