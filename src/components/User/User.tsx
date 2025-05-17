@@ -61,14 +61,23 @@ function User() {
                 <p className="truncate">{userName || 'User'}</p>
               </div>
             )}
-
-            <NavLink
+            {isAuthenticated && (
+              <NavLink
               to="/Profile"
               onClick={() => setIsOpen(false)}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
             >
-              <IonIcon icon={personOutline} className="mr-2 text-gray-500" />
+              <IonIcon icon={pulseOutline} className="mr-2 text-gray-500" />
               My Profile
+            </NavLink>
+            )}
+            <NavLink
+              to="/Chat"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+            >
+              <IonIcon icon={personOutline} className="mr-2 text-gray-500" />
+              Chat
             </NavLink>
 
             <NavLink
