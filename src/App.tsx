@@ -45,7 +45,7 @@ const App: React.FC = () => (
         <IonRouterOutlet>
 
           {/* Tabs */}
-         <Route
+          <Route
             exact
             path="/tab1"
             render={() => (
