@@ -10,7 +10,6 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
@@ -35,6 +34,7 @@ import './theme/variables.css';
 
 import Wrapper from './components/Wrapper';
 import UserInfo from './components/User/UserInfo';
+import BeAware from './components/BeAware';
 
 setupIonicReact();
 
@@ -45,7 +45,7 @@ const App: React.FC = () => (
         <IonRouterOutlet>
 
           {/* Tabs */}
-          <Route
+         <Route
             exact
             path="/tab1"
             render={() => (

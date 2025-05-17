@@ -1,10 +1,7 @@
-// src/pages/UserProfileForm.tsx
 import React, { useState } from 'react';
 
 const UserProfileForm = () => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
     illnesses: '',
     familyHistory: '',
     allergies: '',
@@ -31,108 +28,86 @@ const UserProfileForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-white shadow rounded space-y-4">
-      <h2 className="text-xl font-bold mb-4">User Health Profile</h2>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-            First Name
-          </label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-            Last Name
-          </label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-      </div>
-
-      <textarea
-        name="illnesses"
-        placeholder="Past illnesses"
-        value={formData.illnesses}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
-      />
-
-      <textarea
-        name="familyHistory"
-        placeholder="Family medical history"
-        value={formData.familyHistory}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
-      />
-
-      <textarea
-        name="allergies"
-        placeholder="Allergies"
-        value={formData.allergies}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
-      />
-
-      <label className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          name="isSmoker"
-          checked={formData.isSmoker}
-          onChange={handleChange}
-        />
-        <span>Smoker</span>
-      </label>
-
-      <input
-        type="number"
-        name="weight"
-        placeholder="Weight (kg)"
-        value={formData.weight}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
-      />
-
-      <input
-        type="number"
-        name="height"
-        placeholder="Height (cm)"
-        value={formData.height}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
-      />
-
-      <select
-        name="location"
-        value={formData.location}
-        onChange={handleChange}
-        className="w-full border p-2 rounded"
+    <div className="w-[60%] mx-auto p-6"> {/* 10% more width container */}
+      <form 
+        onSubmit={handleSubmit} 
+        className="p-6 bg-white rounded-xl border-2 border-gray-200 shadow-md space-y-4" /* Added rounded-xl and border-2 */
       >
-        <option value="">Select Location</option>
-        {locations.map((loc) => (
-          <option key={loc} value={loc}>{loc}</option>
-        ))}
-      </select>
+        <h2 className="text-xl font-bold mb-4">User Health Profile</h2>
 
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-        Submit
-      </button>
-    </form>
+        <textarea
+          name="illnesses"
+          placeholder="Past illnesses"
+          value={formData.illnesses}
+          onChange={handleChange}
+          className="w-full border p-2 rounded-lg border-gray-300" /* Added rounded-lg */
+        />
+
+        <textarea
+          name="familyHistory"
+          placeholder="Family medical history"
+          value={formData.familyHistory}
+          onChange={handleChange}
+          className="w-full border p-2 rounded-lg border-gray-300"
+        />
+
+        <textarea
+          name="allergies"
+          placeholder="Allergies"
+          value={formData.allergies}
+          onChange={handleChange}
+          className="w-full border p-2 rounded-lg border-gray-300"
+        />
+
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            name="isSmoker"
+            checked={formData.isSmoker}
+            onChange={handleChange}
+            className="rounded border-gray-300" /* Added rounded */
+          />
+          <span>Smoker</span>
+        </label>
+
+        <input
+          type="number"
+          name="weight"
+          placeholder="Weight (kg)"
+          value={formData.weight}
+          onChange={handleChange}
+          className="w-full border p-2 rounded-lg border-gray-300"
+        />
+
+        <input
+          type="number"
+          name="height"
+          placeholder="Height (cm)"
+          value={formData.height}
+          onChange={handleChange}
+          className="w-full border p-2 rounded-lg border-gray-300"
+        />
+
+        <select
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          className="w-full border p-2 rounded-lg border-gray-300"
+        >
+          <option value="">Select Location</option>
+          {locations.map((loc) => (
+            <option key={loc} value={loc}>{loc}</option>
+          ))}
+        </select>
+
+        <button 
+          type="submit" 
+          className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
   );
 };
 
