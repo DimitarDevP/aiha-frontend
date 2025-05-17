@@ -1,6 +1,5 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { useState } from 'react';
-import './Tab2.css';
 
 const Tab2: React.FC = () => {
     const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
