@@ -31,6 +31,7 @@ import Wrapper from './components/Wrapper';
 import UserInfo from './components/User/UserInfo';
 import BeAware from './components/BeAware/BeAware';
 import Home from './components/Home/Home';
+import NewsCard from './components/NewsCard/NewsCard';
 
 // Define RootState type
 interface RootState {
@@ -84,6 +85,16 @@ const App: React.FC = () => {
               render={() => (
                 <Wrapper>
                   <UserInfo />
+                </Wrapper>
+              )}
+            />
+
+            <Route
+              exact
+              path="/news"
+              render={() => (
+                <Wrapper>
+                  <NewsCard />
                 </Wrapper>
               )}
             />

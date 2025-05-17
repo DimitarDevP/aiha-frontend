@@ -1,4 +1,5 @@
 import { useHistory } from "react-router-dom";
+import NewsCard from "../NewsCard/NewsCard";
 
 const cards = [
   {
@@ -18,12 +19,12 @@ const cards = [
     image: "/src/assets/images/my-profile.png",
     text: "Manage your personal information and settings",
     route: "/UserInfo",
-      },
-      {
-    title: "Something",
-    image: "",
-    text: "Explore additional features and tools",
-    route: "/something",
+  },
+  {
+    title: "News & Updates",
+    image: "", // Add a news image to your assets
+    text: "Stay updated with the latest health news and advisories",
+    route: "/news",
   },
 ];
 
@@ -61,6 +62,8 @@ const Home: React.FC = () => {
             </div>
           </div>
         ))}
+        
+
       </div>
     </main>
   );
