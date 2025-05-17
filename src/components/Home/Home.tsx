@@ -1,5 +1,4 @@
 import { useHistory } from "react-router-dom";
-import NewsCard from "../NewsCard/NewsCard";
 
 const cards = [
   {
@@ -9,7 +8,7 @@ const cards = [
     route: "/Be-Aware",
   },
   {
-    title: "AIHA",
+    title: "AIHA(Artificial Intelligence Health Assistant)",
     image: "/src/assets/images/aiha.png",
     text: "Get personalized health advice from our AI assistant",
     route: "/Chat",
@@ -22,7 +21,7 @@ const cards = [
       },
     {
         title: "News",
-        image: "",
+        image: "/static/Health-News.jpg",
         text: "Get the latest health news and updates",
         route: "/NewsCard",
     },   
