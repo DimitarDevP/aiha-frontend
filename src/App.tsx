@@ -10,9 +10,7 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
 
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
@@ -47,11 +45,10 @@ const App: React.FC = () => (
           {/* Tabs */}
          <Route
             exact
-            path="/tab1"
+            path="/tab3"
             render={() => (
               <Wrapper>
-                <UserInfo />
-                <Tab1 />
+                  <BeAware />
               </Wrapper>
             )}
           />
@@ -66,10 +63,10 @@ const App: React.FC = () => (
           />
           <Route
             exact
-            path="/tab3"
+            path="/tab1"
             render={() => (
               <Wrapper>
-                <Tab3 />
+                  <UserInfo />
               </Wrapper>
             )}
           />
