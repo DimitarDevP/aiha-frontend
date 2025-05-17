@@ -12,8 +12,6 @@ import {
 
 type CardStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
-// beAwareSlice.ts
-// beAwareSlice.ts
 const mockCards: Card[] = [
   {
     id: '1',
@@ -28,7 +26,8 @@ const mockCards: Card[] = [
     ],
     color: 'red',
     icon: '⚠️',
-    location: { lat: 48.8566, lng: 2.3522, intensity: 0.9 } // Paris, France
+    location: { lat: 48.8566, lng: 2.3522, intensity: 0.9 }, // Paris, France
+    date: '2023-06-15T14:30:00Z'
   },
   {
     id: '2',
@@ -43,7 +42,8 @@ const mockCards: Card[] = [
     ],
     color: 'yellow',
     icon: '🌡️',
-    location: { lat: 41.9028, lng: 12.4964, intensity: 0.7 } // Rome, Italy
+    location: { lat: 41.9028, lng: 12.4964, intensity: 0.7 }, // Rome, Italy
+    date: '2023-07-22T10:15:00Z'
   },
   {
     id: '3',
@@ -58,7 +58,8 @@ const mockCards: Card[] = [
     ],
     color: 'blue',
     icon: '🌊',
-    location: { lat: 52.5200, lng: 13.4050, intensity: 0.8 } // Berlin, Germany
+    location: { lat: 52.5200, lng: 13.4050, intensity: 0.8 }, // Berlin, Germany
+    date: '2023-05-08T08:45:00Z'
   },
   {
     id: '4',
@@ -73,7 +74,8 @@ const mockCards: Card[] = [
     ],
     color: 'red',
     icon: '🔥',
-    location: { lat: 38.7223, lng: -9.1393, intensity: 0.95 } // Lisbon, Portugal
+    location: { lat: 38.7223, lng: -9.1393, intensity: 0.95 }, // Lisbon, Portugal
+    date: '2023-08-03T16:20:00Z'
   },
   {
     id: '5',
@@ -88,7 +90,8 @@ const mockCards: Card[] = [
     ],
     color: 'purple',
     icon: '🏭',
-    location: { lat: 50.0755, lng: 14.4378, intensity: 0.6 } // Prague, Czech Republic
+    location: { lat: 50.0755, lng: 14.4378, intensity: 0.6 }, // Prague, Czech Republic
+    date: '2023-04-12T11:10:00Z'
   },
   {
     id: '6',
@@ -103,7 +106,8 @@ const mockCards: Card[] = [
     ],
     color: 'yellow',
     icon: '🚆',
-    location: { lat: 45.7640, lng: 4.8357, intensity: 0.5 } // Lyon, France
+    location: { lat: 45.7640, lng: 4.8357, intensity: 0.5 }, // Lyon, France
+    date: '2023-09-19T07:30:00Z'
   },
   {
     id: '7',
@@ -118,7 +122,8 @@ const mockCards: Card[] = [
     ],
     color: 'blue',
     icon: '❄️',
-    location: { lat: 59.3293, lng: 18.0686, intensity: 0.7 } // Stockholm, Sweden
+    location: { lat: 59.3293, lng: 18.0686, intensity: 0.7 }, // Stockholm, Sweden
+    date: '2023-12-05T13:45:00Z'
   }
 ];
 
@@ -135,6 +140,7 @@ export interface Card {
     lng: number;
     intensity?: number;
   };
+  date?: string; // ISO 8601 date string
 }
 
 interface CardState {
