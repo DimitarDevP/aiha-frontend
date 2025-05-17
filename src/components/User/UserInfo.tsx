@@ -13,7 +13,6 @@ const UserProfileForm = () => {
     type: null,
   });
 
-  // Form state initialized with user data from Redux
   const [formData, setFormData] = useState({
     date_of_birth: user.date_of_birth || '',
     height: user.height?.toString() || '',
@@ -22,15 +21,12 @@ const UserProfileForm = () => {
     allergies: user.allergies || '',
     addictions: user.addictions || '',
     family_history: user.family_history || '',
-    location: '',  // Will be populated from lat/lng
+    location: '', // Will be auto-filled
   });
 
-  // Populate locations based on user data
-  const locations = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Miami'];
-  
-  // Update form when user data changes in Redux
   useEffect(() => {
-    setFormData({
+    setFormData((prev) => ({
+      ...prev,
       date_of_birth: user.date_of_birth || '',
       height: user.height?.toString() || '',
       weight: user.weight?.toString() || '',
@@ -38,16 +34,54 @@ const UserProfileForm = () => {
       allergies: user.allergies || '',
       addictions: user.addictions || '',
       family_history: user.family_history || '',
-      location: '', // You would need a map from lat/lng to location name
-    });
+    }));
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const target = e.target as HTMLInputElement;
-    const { name, value, type, checked } = target;
+  useEffect(() => {
+    const fetchLocationFromCoords = async (lat: number, lon: number) => {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`,
+          {
+            headers: {
+              'User-Agent': 'your-app-name (your@email.com)',
+            },
+          }
+        );
+
+        const data = await response.json();
+        const { city, town, village, country } = data.address;
+
+        const locationName = [city || town || village, country].filter(Boolean).join(', ');
+        setFormData((prev) => ({
+          ...prev,
+          location: locationName,
+        }));
+      } catch (err) {
+        console.warn('Failed to reverse geocode:', err);
+      }
+    };
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          fetchLocationFromCoords(latitude, longitude);
+        },
+        (err) => {
+          console.warn('Geolocation failed or denied:', err);
+        }
+      );
+    } else {
+      console.warn('Geolocation not supported');
+    }
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: value,
     }));
   };
 
@@ -56,7 +90,6 @@ const UserProfileForm = () => {
     setIsLoading(true);
     setMessage({ text: '', type: null });
 
-    // Convert string values to appropriate types
     const updatedUserData = {
       date_of_birth: formData.date_of_birth,
       height: formData.height ? parseFloat(formData.height) : null,
@@ -65,34 +98,23 @@ const UserProfileForm = () => {
       allergies: formData.allergies,
       addictions: formData.addictions,
       family_history: formData.family_history,
-      // Add location handling if needed
+      location: formData.location,
     };
 
     try {
-      // Dispatch the async thunk action for API update
       const resultAction = await dispatch(updateUserData(updatedUserData) as any);
-      
+
       if (updateUserData.fulfilled.match(resultAction)) {
-        // Update successful
-        setMessage({
-          text: 'Profile updated successfully!',
-          type: 'success',
-        });
-        
-        // Update local Redux state with the latest user data
+        setMessage({ text: 'Profile updated successfully!', type: 'success' });
         dispatch(updateUserProfile(updatedUserData));
       } else {
-        // Update failed
         setMessage({
-          text: resultAction.payload as string || 'Failed to update profile. Please try again.',
+          text: resultAction.payload as string || 'Failed to update profile.',
           type: 'error',
         });
       }
-    } catch (error) {
-      setMessage({
-        text: 'An unexpected error occurred. Please try again.',
-        type: 'error',
-      });
+    } catch {
+      setMessage({ text: 'Unexpected error occurred.', type: 'error' });
     } finally {
       setIsLoading(false);
     }
@@ -106,15 +128,12 @@ const UserProfileForm = () => {
       >
         <h2 className="text-xl font-bold mb-4">Update Your Health Profile</h2>
 
-        {/* Display messages */}
         {message.text && (
           <div className={`p-3 rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
             {message.text}
           </div>
         )}
 
-
-        {/* Date of Birth field */}
         <div className="space-y-1">
           <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
           <input
@@ -126,14 +145,12 @@ const UserProfileForm = () => {
           />
         </div>
 
-        {/* Height and Weight in a flex container */}
         <div className="flex gap-4">
           <div className="space-y-1 w-1/2">
             <label className="block text-sm font-medium text-gray-700">Height (cm)</label>
             <input
               type="number"
               name="height"
-              placeholder="Height in cm"
               value={formData.height}
               onChange={handleChange}
               className="w-full border p-2 rounded-lg border-gray-300"
@@ -144,7 +161,6 @@ const UserProfileForm = () => {
             <input
               type="number"
               name="weight"
-              placeholder="Weight in kg"
               value={formData.weight}
               onChange={handleChange}
               className="w-full border p-2 rounded-lg border-gray-300"
@@ -152,12 +168,10 @@ const UserProfileForm = () => {
           </div>
         </div>
 
-        {/* Medical information fields */}
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">Past Illnesses</label>
+          <label className="block text-sm font-medium text-gray-700">Illnesses</label>
           <textarea
             name="illnesses"
-            placeholder="List any past or current illnesses"
             value={formData.illnesses}
             onChange={handleChange}
             className="w-full border p-2 rounded-lg border-gray-300 min-h-24"
@@ -165,10 +179,9 @@ const UserProfileForm = () => {
         </div>
 
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">Family Medical History</label>
+          <label className="block text-sm font-medium text-gray-700">Family History</label>
           <textarea
             name="family_history"
-            placeholder="Describe your family's medical history"
             value={formData.family_history}
             onChange={handleChange}
             className="w-full border p-2 rounded-lg border-gray-300 min-h-24"
@@ -179,7 +192,6 @@ const UserProfileForm = () => {
           <label className="block text-sm font-medium text-gray-700">Allergies</label>
           <textarea
             name="allergies"
-            placeholder="List any allergies"
             value={formData.allergies}
             onChange={handleChange}
             className="w-full border p-2 rounded-lg border-gray-300 min-h-24"
@@ -190,32 +202,25 @@ const UserProfileForm = () => {
           <label className="block text-sm font-medium text-gray-700">Addictions</label>
           <textarea
             name="addictions"
-            placeholder="List any addictions or dependencies"
             value={formData.addictions}
             onChange={handleChange}
             className="w-full border p-2 rounded-lg border-gray-300 min-h-24"
           />
         </div>
 
-        {/* Location selector */}
         <div className="space-y-1">
-          <label className="block text-sm font-medium text-gray-700">Location</label>
-          <select
+          <label className="block text-sm font-medium text-gray-700">Location (Auto-detected)</label>
+          <input
+            type="text"
             name="location"
             value={formData.location}
-            onChange={handleChange}
-            className="w-full border p-2 rounded-lg border-gray-300"
-          >
-            <option value="">Select Location</option>
-            {locations.map((loc) => (
-              <option key={loc} value={loc}>{loc}</option>
-            ))}
-          </select>
+            readOnly
+            className="w-full border p-2 rounded-lg border-gray-300 bg-gray-100 cursor-not-allowed"
+          />
         </div>
 
-        {/* Submit button */}
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={isLoading}
           className={`w-full text-white px-4 py-2 rounded-lg transition-colors ${
             isLoading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
