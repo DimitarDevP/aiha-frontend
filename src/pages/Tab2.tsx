@@ -1,11 +1,12 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonContent as IonContentType } from '@ionic/react';
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const Tab2: React.FC = () => {
     const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
         { text: 'Hello! How can I help with your health today?', isUser: false },
     ]);
     const [inputText, setInputText] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const contentRef = useRef<IonContentType>(null);
 
     const handleSendMessage = () => {
@@ -14,6 +15,7 @@ const Tab2: React.FC = () => {
         // Add user message
         setMessages([...messages, { text: inputText, isUser: true }]);
         setInputText('');
+        setIsLoading(true);
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,17 +28,19 @@ const Tab2: React.FC = () => {
         }
     };
 
-    // Simulate AI response (replace with actual NLP logic later)
+    // Simulate AI response with delay and loading state
     useEffect(() => {
-        if (messages[messages.length - 1]?.isUser) {
-            setTimeout(() => {
+        if (messages[messages.length - 1]?.isUser && isLoading) {
+            const timer = setTimeout(() => {
                 setMessages((prev) => [
                     ...prev,
                     { text: 'Based on the air quality data, it’s safe to jog today!', isUser: false },
                 ]);
-            }, 1000);
+                setIsLoading(false);
+            }, 2000); // 2-second delay (1 second existing + 1 second new)
+            return () => clearTimeout(timer);
         }
-    }, [messages]);
+    }, [messages, isLoading]);
 
     // Autoscroll to bottom when messages change
     useEffect(() => {
@@ -74,6 +78,13 @@ const Tab2: React.FC = () => {
                             {message.text}
                         </div>
                     ))}
+                    {isLoading && (
+                        <div className="flex items-center space-x-2 bg-gray-300 p-3 rounded-lg max-w-[65px] self-start mr-auto">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-100"></div>
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-200"></div>
+                        </div>
+                    )}
                 </div>
             </IonContent>
             <div className="sticky bottom-0 p-4 flex items-center gap-2 bg-white">
