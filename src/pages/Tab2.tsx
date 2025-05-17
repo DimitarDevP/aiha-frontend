@@ -1,5 +1,5 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonContent as IonContentType } from '@ionic/react';
-import { useState, useEffect, useRef } from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Tab2: React.FC = () => {
     const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
@@ -7,7 +7,7 @@ const Tab2: React.FC = () => {
     ]);
     const [inputText, setInputText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const contentRef = useRef<typeof IonContentType>(null);
+    const contentRef = useRef<HTMLIonContentElement>(null);
 
     const handleSendMessage = () => {
         if (inputText.trim() === '') return;
@@ -92,7 +92,7 @@ const Tab2: React.FC = () => {
                     type="text"
                     value={inputText}
                     onChange={handleInputChange}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyPress}
                     placeholder="Type your message..."
                     className="flex-1 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
