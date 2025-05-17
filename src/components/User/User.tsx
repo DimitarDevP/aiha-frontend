@@ -91,7 +91,6 @@ function User() {
               <IonIcon icon={chatbubbleOutline} className="mr-2 text-gray-500" />
               Chat
             </NavLink>
-
             <NavLink
               to="/Be-Aware"
               onClick={() => setIsOpen(false)}

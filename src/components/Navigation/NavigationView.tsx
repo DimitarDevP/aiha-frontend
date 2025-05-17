@@ -7,9 +7,7 @@ function NavigationView() {
   const getPageTitle = () => {
     const path = location.pathname;
     
-    if (path === '/' || path === '/Home') {
-      return 'Home';
-    } else if (path === '/Be-Aware') {
+    if (path === '/Be-Aware') {
       return 'Be Aware';
     } else if (path === '/Chat') {
       return 'AIHA';
@@ -21,13 +19,26 @@ function NavigationView() {
       return 'Register';
     }
     
-    // Default fallback for unknown routes
-    return 'Health App';
+    // Return empty for Home ('/' or '/Home') and other routes
+    return '';
   };
+
+  const pageTitle = getPageTitle();
 
   return (
     <div className="flex justify-between items-center px-6 py-4 bg-gray-100 shadow z-[100000]">
-      <div className="text-lg font-semibold">{getPageTitle()}</div>
+      <div className="flex items-center gap-2">
+        <img 
+          src="static/logo.png"
+          alt="App Logo" 
+          className="h-14"
+        />
+        {pageTitle && (
+          <span className="text-lg font-semibold">
+            {pageTitle}
+          </span>
+        )}
+      </div>
       <User />
     </div>
   );
