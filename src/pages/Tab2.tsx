@@ -1,114 +1,123 @@
-import React, { useState } from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonContent as IonContentType } from '@ionic/react';
+import { useState, useEffect, useRef } from 'react';
 
-const UserProfileForm = () => {
-  const [formData, setFormData] = useState({
-    illnesses: '',
-    familyHistory: '',
-    allergies: '',
-    isSmoker: false,
-    weight: '',
-    height: '',
-    location: '',
-  });
+const Tab2: React.FC = () => {
+    const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
+        { text: 'Hello! How can I help with your health today?', isUser: false },
+    ]);
+    const [inputText, setInputText] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const contentRef = useRef<typeof IonContentType>(null);
 
-  const locations = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Miami'];
+    const handleSendMessage = () => {
+        if (inputText.trim() === '') return;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const target = e.target as HTMLInputElement;
-    const { name, value, type, checked } = target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
+        // Add user message
+        setMessages([...messages, { text: inputText, isUser: true }]);
+        setInputText('');
+        setIsLoading(true);
+    };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form Submitted:', formData);
-  };
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputText(e.target.value);
+    };
 
-  return (
-    <div className="w-[110%] mx-auto p-6"> {/* 10% more width container */}
-      <form 
-        onSubmit={handleSubmit} 
-        className="p-6 bg-white rounded-xl border-2 border-gray-200 shadow-md space-y-4" /* Added rounded-xl and border-2 */
-      >
-        <h2 className="text-xl font-bold mb-4">User Health Profile</h2>
+    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSendMessage();
+        }
+    };
 
-        <textarea
-          name="illnesses"
-          placeholder="Past illnesses"
-          value={formData.illnesses}
-          onChange={handleChange}
-          className="w-full border p-2 rounded-lg border-gray-300" /* Added rounded-lg */
-        />
+    // Simulate AI response with delay and loading state
+    useEffect(() => {
+        if (messages[messages.length - 1]?.isUser && isLoading) {
+            const timer = setTimeout(() => {
+                setMessages((prev) => [
+                    ...prev,
+                    { text: 'Based on the air quality data, it’s safe to jog today!', isUser: false },
+                ]);
+                setIsLoading(false);
+            }, 2000); // 2-second delay (1 second existing + 1 second new)
+            return () => clearTimeout(timer);
+        }
+    }, [messages, isLoading]);
 
-        <textarea
-          name="familyHistory"
-          placeholder="Family medical history"
-          value={formData.familyHistory}
-          onChange={handleChange}
-          className="w-full border p-2 rounded-lg border-gray-300"
-        />
+    // Autoscroll to bottom when messages change
+    useEffect(() => {
+        const scrollToBottom = async () => {
+            if (contentRef.current) {
+                await contentRef.current.scrollToBottom(300); // 300ms for smooth scrolling
+            }
+        };
+        scrollToBottom();
+    }, [messages]);
 
-        <textarea
-          name="allergies"
-          placeholder="Allergies"
-          value={formData.allergies}
-          onChange={handleChange}
-          className="w-full border p-2 rounded-lg border-gray-300"
-        />
-
-        <label className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            name="isSmoker"
-            checked={formData.isSmoker}
-            onChange={handleChange}
-            className="rounded border-gray-300" /* Added rounded */
-          />
-          <span>Smoker</span>
-        </label>
-
-        <input
-          type="number"
-          name="weight"
-          placeholder="Weight (kg)"
-          value={formData.weight}
-          onChange={handleChange}
-          className="w-full border p-2 rounded-lg border-gray-300"
-        />
-
-        <input
-          type="number"
-          name="height"
-          placeholder="Height (cm)"
-          value={formData.height}
-          onChange={handleChange}
-          className="w-full border p-2 rounded-lg border-gray-300"
-        />
-
-        <select
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
-          className="w-full border p-2 rounded-lg border-gray-300"
-        >
-          <option value="">Select Location</option>
-          {locations.map((loc) => (
-            <option key={loc} value={loc}>{loc}</option>
-          ))}
-        </select>
-
-        <button 
-          type="submit" 
-          className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          Submit
-        </button>
-      </form>
-    </div>
-  );
+    return (
+        <IonPage>
+            <IonHeader>
+                <IonToolbar>
+                    <IonTitle>Chatbot</IonTitle>
+                </IonToolbar>
+            </IonHeader>
+            <IonContent ref={contentRef} fullscreen className="flex flex-col">
+                <IonHeader collapse="condense">
+                    <IonToolbar>
+                        <IonTitle size="large">Chatbot</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
+                <div className="flex-1 overflow-y-auto p-4 pt-8 space-y-4">
+                    {messages.map((message, index) => (
+                        <div
+                            key={index}
+                            className={`p-3 rounded-lg max-w-xs ${
+                                message.isUser
+                                    ? 'bg-blue-500 text-white self-end ml-auto'
+                                    : 'bg-gray-300 text-black self-start mr-auto'
+                            }`}
+                        >
+                            {message.text}
+                        </div>
+                    ))}
+                    {isLoading && (
+                        <div className="flex items-center space-x-2 bg-gray-300 p-3 rounded-lg max-w-[65px] self-start mr-auto">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-100"></div>
+                            <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce delay-200"></div>
+                        </div>
+                    )}
+                </div>
+            </IonContent>
+            <div className="sticky bottom-0 p-4 flex items-center gap-2 bg-white">
+                <input
+                    type="text"
+                    value={inputText}
+                    onChange={handleInputChange}
+                    onKeyPress={handleKeyPress}
+                    placeholder="Type your message..."
+                    className="flex-1 p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                    onClick={handleSendMessage}
+                    className="p-2 bg-blue-500 rounded-full text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="size-6"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+                        />
+                    </svg>
+                </button>
+            </div>
+        </IonPage>
+    );
 };
 
-export default UserProfileForm;
+export default Tab2;
