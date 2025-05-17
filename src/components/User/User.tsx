@@ -63,7 +63,7 @@ function User() {
             )}
 
             <NavLink
-              to="/profile"
+              to="/Profile"
               onClick={() => setIsOpen(false)}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
             >
@@ -72,13 +72,13 @@ function User() {
             </NavLink>
 
             <NavLink
-              to="/activity"
+              to="/Be-Aware"
               onClick={() => setIsOpen(false)}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
             >
               <IonIcon icon={pulseOutline} 
               className="mr-2 text-gray-500" />
-              My Activity
+              Be Aware
             </NavLink>
 
             {isAuthenticated && (
