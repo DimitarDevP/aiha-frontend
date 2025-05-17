@@ -1,26 +1,18 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { useState } from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonContent as IonContentType } from '@ionic/react';
+import { useState, useEffect, useRef } from 'react';
 
 const Tab2: React.FC = () => {
     const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
         { text: 'Hello! How can I help with your health today?', isUser: false },
     ]);
     const [inputText, setInputText] = useState('');
+    const contentRef = useRef<IonContentType>(null);
 
     const handleSendMessage = () => {
         if (inputText.trim() === '') return;
 
         // Add user message
         setMessages([...messages, { text: inputText, isUser: true }]);
-
-        // Simulate AI response (replace with actual NLP logic later)
-        setTimeout(() => {
-            setMessages((prev) => [
-                ...prev,
-                { text: 'Based on the air quality data, it’s safe to jog today!', isUser: false },
-            ]);
-        }, 1000);
-
         setInputText('');
     };
 
@@ -34,6 +26,28 @@ const Tab2: React.FC = () => {
         }
     };
 
+    // Simulate AI response (replace with actual NLP logic later)
+    useEffect(() => {
+        if (messages[messages.length - 1]?.isUser) {
+            setTimeout(() => {
+                setMessages((prev) => [
+                    ...prev,
+                    { text: 'Based on the air quality data, it’s safe to jog today!', isUser: false },
+                ]);
+            }, 1000);
+        }
+    }, [messages]);
+
+    // Autoscroll to bottom when messages change
+    useEffect(() => {
+        const scrollToBottom = async () => {
+            if (contentRef.current) {
+                await contentRef.current.scrollToBottom(300); // 300ms for smooth scrolling
+            }
+        };
+        scrollToBottom();
+    }, [messages]);
+
     return (
         <IonPage>
             <IonHeader>
@@ -41,20 +55,20 @@ const Tab2: React.FC = () => {
                     <IonTitle>Chatbot</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent fullscreen className="flex flex-col">
+            <IonContent ref={contentRef} fullscreen className="flex flex-col">
                 <IonHeader collapse="condense">
                     <IonToolbar>
                         <IonTitle size="large">Chatbot</IonTitle>
                     </IonToolbar>
                 </IonHeader>
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                <div className="flex-1 overflow-y-auto p-4 pt-8 space-y-4">
                     {messages.map((message, index) => (
                         <div
                             key={index}
                             className={`p-3 rounded-lg max-w-xs ${
                                 message.isUser
                                     ? 'bg-blue-500 text-white self-end ml-auto'
-                                    : 'bg-white text-black self-start mr-auto'
+                                    : 'bg-gray-300 text-black self-start mr-auto'
                             }`}
                         >
                             {message.text}
@@ -62,7 +76,7 @@ const Tab2: React.FC = () => {
                     ))}
                 </div>
             </IonContent>
-            <div className="sticky bottom-0 p-4 flex items-center gap-2 bg-gray-100">
+            <div className="sticky bottom-0 p-4 flex items-center gap-2 bg-white">
                 <input
                     type="text"
                     value={inputText}
