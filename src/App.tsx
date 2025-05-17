@@ -97,10 +97,9 @@ const App: React.FC = () => {
               <Wrapper>
                 <Tab3 />
               </Wrapper>
-            )}
-          />
-
-          {/* Auth routes with redirect when authenticated */}
+              )}
+            />
+            {/* Auth routes with redirect when authenticated */}
               <Route
                 exact
                 path="/login"
