@@ -15,6 +15,8 @@ function NavigationView() {
       return 'AIHA';
     } else if (path === '/Profile') {
       return 'My Profile';
+    } else if (path === '/Vault') {
+      return 'User Vault';
     } else if (path === '/login') {
       return 'Sign In';
     } else if (path === '/register') {

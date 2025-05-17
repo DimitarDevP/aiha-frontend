@@ -17,13 +17,13 @@ const cards = [
     title: "My Profile",
     image: "/src/assets/images/my-profile.png",
     text: "Manage your personal information and settings",
-    route: "/UserInfo",
+    route: "/Profile",
       },
       {
-    title: "Something",
-    image: "",
-    text: "Explore additional features and tools",
-    route: "/something",
+        title: "User Vault",
+        image: "/src/assets/images/user-vault.png",
+        text: "Securely store and manage your personal health records",
+        route: "/Vault",
   },
 ];
 

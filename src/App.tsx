@@ -11,6 +11,7 @@ import {
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Tab2 from './pages/Tab2';
+import Tab3 from './pages/Tab3';
 
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
@@ -77,6 +78,15 @@ const App: React.FC = () => (
             render={() => (
               <Wrapper>
                   <UserInfo />
+              </Wrapper>
+            )}
+          />
+          <Route
+            exact
+            path="/Vault"
+            render={() => (
+              <Wrapper>
+                <Tab3 />
               </Wrapper>
             )}
           />
