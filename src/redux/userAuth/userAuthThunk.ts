@@ -9,7 +9,6 @@ interface LoginCredentials {
 }
 
 interface RegisterData {
-  name: string;
   email: string;
   password: string;
   date_of_birth?: string;
@@ -21,6 +20,19 @@ interface RegisterData {
   family_history?: string;
   location_lat: number;
   location_lng: number;
+  [key: string]: any;
+}
+
+interface UpdateUserData {
+  date_of_birth?: string;
+  height?: number | null;
+  weight?: number | null;
+  illnesses?: string;
+  allergies?: string;
+  addictions?: string;
+  family_history?: string;
+  location_lat?: number;
+  location_lng?: number;
   [key: string]: any;
 }
 
@@ -87,7 +99,6 @@ export const registerUser = createAsyncThunk(
       const formData = new FormData();
 
       // Append required fields
-      formData.append("name", userData.name);
       formData.append("email", userData.email);
       formData.append("password", userData.password);
       formData.append("location_lat", String(userData.location_lat));
@@ -102,9 +113,9 @@ export const registerUser = createAsyncThunk(
       if (userData.addictions) formData.append("addictions", userData.addictions);
       if (userData.family_history) formData.append("family_history", userData.family_history);
 
-      const response = await apiClient.post<AuthResponse>("/users/auth/register", formData, {
+      const response = await apiClient.post<{ message: string }>("/users/auth/register", formData, {
         headers: {
-          "Content-Type": "multipart/form-data", // Explicitly set as form-data
+          "Content-Type": "multipart/form-data",
         },
       });
       return response.data;
@@ -113,6 +124,49 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
+
+export const updateUserData = createAsyncThunk(
+  "userAuth/updateUserProfile",
+  async (updatedData: UpdateUserData, { getState, rejectWithValue }) => {
+    try {
+      const state = getState() as RootState;
+      const token = state.userAuth.access_token;
+      const userId = state.userAuth.user.id;
+
+      if (!userId) {
+        throw new Error("User ID is missing");
+      }
+
+      const formData = new FormData();
+
+      // Add required ID field
+      formData.append("id", userId);
+
+      // Add the other updatable fields
+      Object.entries(updatedData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value.toString());
+        }
+      });
+
+      const response = await apiClient.put<{ user: any }>(
+        "/users/crud", // This matches your crud route
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      return response.data.user;
+    } catch (error) {
+      return rejectWithValue(handleApiError(error));
+    }
+  }
+);
+
 
 export const logoutUser = createAsyncThunk(
   "userAuth/logoutUser",

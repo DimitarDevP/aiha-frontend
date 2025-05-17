@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../../redux/userAuth/userAuthThunk';
 import { useHistory, Link } from 'react-router-dom';
 import { RootState } from '../../store';
 import { getUserLocation } from '../../utils/Location';
 
-type AuthStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
-
 function Register() {
   const dispatch = useDispatch();
   const history = useHistory();
   const { error, status } = useSelector((state: RootState) => state.userAuth);
+  
+  const isAuthenticated = useSelector((state: RootState) => state.userAuth.isAuthenticated);
 
   const [form, setForm] = useState({
-    name: '',
     email: '',
     password: '',
     date_of_birth: '',
@@ -28,10 +27,16 @@ function Register() {
   const [locationError, setLocationError] = useState<string | null>(null);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
+  // Redirect to login after successful registration
+  useEffect(() => {
+    if (status === 'succeeded' && !isAuthenticated) {
+      history.push('/login');
+    }
+  }, [status, history]);
+
   const validateForm = () => {
     const errors: Record<string, string> = {};
     
-    if (!form.name.trim()) errors.name = 'Name is required';
     if (!form.email.trim()) {
       errors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
@@ -51,7 +56,6 @@ function Register() {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
     
-    // Clear error when user starts typing
     if (formErrors[name]) {
       setFormErrors(prev => {
         const newErrors = { ...prev };
@@ -69,7 +73,6 @@ function Register() {
     try {
       setLocationError(null);
       const location = await getUserLocation();
-      
       const userData = {
         ...form,
         height: form.height ? parseInt(form.height) : undefined,
@@ -79,15 +82,10 @@ function Register() {
       };
 
       await dispatch<any>(registerUser(userData));
-      
-      if (status === 'succeeded') {
-        history.push('/login');
-      }
     } catch (error) {
       console.error('Error getting location:', error);
       setLocationError('Failed to get your location. Using default location instead.');
       
-      // Proceed with fallback location
       const userData = {
         ...form,
         height: form.height ? parseInt(form.height) : undefined,
@@ -111,21 +109,6 @@ function Register() {
           <form onSubmit={handleRegister} className="space-y-4">
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
-                <input
-                  type="text"
-                  name="name"
-                  className={`w-full px-4 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
-                    formErrors.name ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  value={form.name}
-                  onChange={handleChange}
-                />
-                {formErrors.name && (
-                  <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>
-                )}
-              </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Email*</label>

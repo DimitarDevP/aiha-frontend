@@ -6,6 +6,7 @@ import {
   registerUser, 
   logoutUser, 
   refreshToken,
+  updateUserData,
 } from "./userAuthThunk";
 
 type AuthStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -65,13 +66,13 @@ const userAuthSlice = createSlice({
   initialState,
   reducers: {
     manualLogout: (state) => {
-    state.isAuthenticated = false;
-    state.access_token = null;
-    state.refresh_token = null;
-    state.user = initialState.user;
-    state.status = 'idle';
-    state.error = null;
-  },
+      state.isAuthenticated = false;
+      state.access_token = null;
+      state.refresh_token = null;
+      state.user = initialState.user;
+      state.status = 'idle';
+      state.error = null;
+    },
     clearAuthError: (state) => {
       state.error = null;
       state.status = 'idle';
@@ -87,64 +88,74 @@ const userAuthSlice = createSlice({
       state.user.location_lng = action.payload.lng;
     }
   },
-  // In your userAuthSlice.ts
-extraReducers: (builder) => {
-  builder
-    // Login
-    .addCase(loginUser.pending, (state) => {
-      state.status = 'loading';
-      state.error = null;
-    })
-    .addCase(loginUser.fulfilled, (state, action) => {
-      state.status = 'succeeded';
-      state.isAuthenticated = true;
-      state.access_token = action.payload.access_token;
-      state.refresh_token = action.payload.refresh_token;
-      state.user = action.payload.user;
-    })
-    .addCase(loginUser.rejected, (state, action) => {
-      state.status = 'failed';
-      state.error = action.payload as string;
-      state.isAuthenticated = false;
-    })
-    
-    // Register
-    .addCase(registerUser.pending, (state) => {
-      state.status = 'loading';
-      state.error = null;
-    })
-    .addCase(registerUser.fulfilled, (state, action) => {
-      state.status = 'succeeded';
-      state.isAuthenticated = true;
-      state.access_token = action.payload.access_token;
-      state.refresh_token = action.payload.refresh_token;
-      state.user = action.payload.user;
-    })
-    .addCase(registerUser.rejected, (state, action) => {
-      state.status = 'failed';
-      state.error = action.payload as string;
-      state.isAuthenticated = false;
-    })
-    
-    // Logout
-    .addCase(logoutUser.fulfilled, (state) => {
-      state.isAuthenticated = false;
-      state.access_token = null;
-      state.refresh_token = null;
-      state.user = initialState.user;
-    })
-    
-    // Refresh token
-    .addCase(refreshToken.fulfilled, (state, action) => {
-      state.access_token = action.payload.access_token;
-      state.isAuthenticated = true;
-    })
-    .addCase(refreshToken.rejected, (state) => {
-      state.isAuthenticated = false;
-      state.access_token = null;
-      state.refresh_token = null;
-    });
-}
+  extraReducers: (builder) => {
+    builder
+      // Login
+      .addCase(loginUser.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.isAuthenticated = true;
+        state.access_token = action.payload.access_token;
+        state.refresh_token = action.payload.refresh_token;
+        state.user = action.payload.user;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+        state.isAuthenticated = false;
+      })
+      
+      // Register
+      .addCase(registerUser.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.error = null;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+        state.isAuthenticated = false;
+      })
+      
+      // Logout
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.isAuthenticated = false;
+        state.access_token = null;
+        state.refresh_token = null;
+        state.user = initialState.user;
+      })
+      
+      // Refresh token
+      .addCase(refreshToken.fulfilled, (state, action) => {
+        state.access_token = action.payload.access_token;
+        state.isAuthenticated = true;
+      })
+      .addCase(refreshToken.rejected, (state) => {
+        state.isAuthenticated = false;
+        state.access_token = null;
+        state.refresh_token = null;
+      })
+      
+      // Update user data
+      .addCase(updateUserData.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(updateUserData.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.user = { ...state.user, ...action.payload };
+      })
+      .addCase(updateUserData.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      });
+  }
 });
 
 const persistConfig = {
@@ -165,6 +176,6 @@ export const {
   manualLogout
 } = userAuthSlice.actions;
 
-export type { UserState };
+export type { UserState, User };
 
 export default persistedUserAuthReducer;
