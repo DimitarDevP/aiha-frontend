@@ -16,6 +16,11 @@ const cards = [
     image: "",
     route: "/monitoring",
   },
+  {
+    title: "Something",
+    image: "",
+    route: "/something",
+  },
 ];
 
 const Home: React.FC = () => {
