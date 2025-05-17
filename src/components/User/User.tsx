@@ -3,7 +3,16 @@ import { NavLink, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { manualLogout } from '../../redux/userAuth/userAuthSlice';
-import { personCircleOutline, logOutOutline, personOutline, pulseOutline, menuOutline } from 'ionicons/icons';
+import { 
+  personCircleOutline, 
+  logOutOutline, 
+  homeOutline,
+  personOutline, 
+  pulseOutline, 
+  menuOutline,
+  chatbubbleOutline,
+  alertCircleOutline
+} from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
 
 function User() {
@@ -48,35 +57,38 @@ function User() {
           onClick={toggleMenu}
           className="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center cursor-pointer hover:bg-indigo-700 transition-colors"
         >
-          <IonIcon icon={personCircleOutline} className="text-xl" />
+          <IonIcon icon={personCircleOutline} className="text-[30px]" />
         </div>
       )}
 
       {isOpen && (
         <div className="absolute right-0 top-12 w-56 bg-white rounded-md shadow-lg z-[1000] ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-            {isAuthenticated && (
-              <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
-                <p className="font-medium">Welcome back</p>
-                <p className="truncate">{userName || 'User'}</p>
-              </div>
-            )}
-            {isAuthenticated && (
-              <NavLink
-              to="/Profile"
+
+            <NavLink
+              to="/Home"
               onClick={() => setIsOpen(false)}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
             >
-              <IonIcon icon={pulseOutline} className="mr-2 text-gray-500" />
-              My Profile
+              <IonIcon icon={homeOutline} className="mr-2 text-gray-500" />
+              Home
             </NavLink>
+            {isAuthenticated && (
+              <NavLink
+                to="/Profile"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              >
+                <IonIcon icon={personOutline} className="mr-2 text-gray-500" />
+                My Profile
+              </NavLink>
             )}
             <NavLink
               to="/Chat"
               onClick={() => setIsOpen(false)}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
             >
-              <IonIcon icon={personOutline} className="mr-2 text-gray-500" />
+              <IonIcon icon={chatbubbleOutline} className="mr-2 text-gray-500" />
               Chat
             </NavLink>
             <NavLink
@@ -84,8 +96,7 @@ function User() {
               onClick={() => setIsOpen(false)}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
             >
-              <IonIcon icon={pulseOutline} 
-              className="mr-2 text-gray-500" />
+              <IonIcon icon={alertCircleOutline} className="mr-2 text-gray-500" />
               Be Aware
             </NavLink>
 
@@ -94,8 +105,7 @@ function User() {
                 onClick={handleLogout}
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
               >
-                <IonIcon icon={logOutOutline} 
-                className="mr-2 text-gray-500" />
+                <IonIcon icon={logOutOutline} className="mr-2 text-gray-500" />
                 Log Out
               </button>
             )}

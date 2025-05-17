@@ -12,76 +12,113 @@ import {
 
 type CardStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
+// beAwareSlice.ts
+// beAwareSlice.ts
 const mockCards: Card[] = [
   {
     id: '1',
-    title: 'Weather Alert',
-    summary: 'Severe thunderstorm warning in your area',
-    details: 'A severe thunderstorm is expected to hit your area within the next hour. Expect heavy rain, strong winds up to 60 mph, and possible hail.',
+    title: 'Severe Storm Warning',
+    summary: 'Heavy thunderstorms expected across Western Europe',
+    details: 'A severe thunderstorm system is moving across Western Europe, bringing heavy rain, strong winds up to 80 km/h, and possible hail. The worst affected areas will be northern France and Benelux countries.',
     recommendations: [
-      'Stay indoors and away from windows',
-      'Avoid using electrical appliances',
-      'Have a flashlight and batteries ready',
-      'Monitor local weather updates'
+      'Avoid unnecessary travel',
+      'Secure outdoor objects',
+      'Stay away from windows during storms',
+      'Monitor local weather alerts'
     ],
     color: 'red',
-    icon: '⚠️'
+    icon: '⚠️',
+    location: { lat: 48.8566, lng: 2.3522, intensity: 0.9 } // Paris, France
   },
   {
     id: '2',
-    title: 'Health Advisory',
-    summary: 'Flu season is approaching',
-    details: 'Local health authorities report an early start to flu season with higher than usual cases reported. Vulnerable populations are at increased risk.',
+    title: 'Heatwave Advisory',
+    summary: 'Extreme temperatures in Southern Europe',
+    details: 'A prolonged heatwave is affecting Southern Europe with temperatures expected to reach 40°C in some areas. The heatwave will particularly impact Spain, Italy, and Greece.',
     recommendations: [
-      'Get your flu vaccination',
-      'Wash hands frequently',
-      'Avoid close contact with sick individuals',
-      'Stay home if you feel unwell'
+      'Stay hydrated',
+      'Avoid outdoor activities during peak hours',
+      'Check on vulnerable neighbors',
+      'Use sun protection'
     ],
-    color: 'blue',
-    icon: '💉'
+    color: 'yellow',
+    icon: '🌡️',
+    location: { lat: 41.9028, lng: 12.4964, intensity: 0.7 } // Rome, Italy
   },
   {
     id: '3',
-    title: 'Community Event',
-    summary: 'Neighborhood clean-up day this weekend',
-    details: 'Annual community clean-up event scheduled for Saturday from 9am to 1pm. Volunteers will meet at the community center.',
+    title: 'Flood Warning',
+    summary: 'River flooding expected in Central Europe',
+    details: 'Heavy rainfall has caused rivers to rise to dangerous levels in Germany, Austria, and Switzerland. Flooding is expected in low-lying areas along major river systems.',
     recommendations: [
-      'Bring gloves and reusable water bottles',
-      'Wear comfortable clothing and closed-toe shoes',
-      'Register in advance if possible',
-      'Spread the word to neighbors'
+      'Avoid flood-prone areas',
+      'Prepare sandbags if in risk zone',
+      'Have emergency supplies ready',
+      'Follow evacuation orders if issued'
     ],
-    color: 'green',
-    icon: '♻️'
+    color: 'blue',
+    icon: '🌊',
+    location: { lat: 52.5200, lng: 13.4050, intensity: 0.8 } // Berlin, Germany
   },
   {
     id: '4',
-    title: 'Road Closure',
-    summary: 'Main Street will be closed for construction',
-    details: 'From Monday to Friday next week, Main Street between 5th and 8th avenues will be closed for sewer line replacement. Detours will be in place.',
+    title: 'Forest Fire Alert',
+    summary: 'High risk of wildfires in Mediterranean region',
+    details: 'Dry conditions and high temperatures have created extreme fire risk in Portugal, Spain, and southern France. Several fires are already burning out of control.',
     recommendations: [
-      'Plan alternative routes',
-      'Allow extra travel time',
-      'Consider public transportation',
-      'Check city website for updates'
+      'Avoid outdoor burning',
+      'Report any signs of fire immediately',
+      'Prepare evacuation plans',
+      'Follow local authority instructions'
     ],
-    color: 'yellow',
-    icon: '🚧'
+    color: 'red',
+    icon: '🔥',
+    location: { lat: 38.7223, lng: -9.1393, intensity: 0.95 } // Lisbon, Portugal
   },
   {
     id: '5',
-    title: 'Public Safety Notice',
-    summary: 'Recent increase in package thefts',
-    details: 'There has been a recent spike in package thefts from porches in the area. Police are investigating but recommend extra precautions.',
+    title: 'Air Quality Warning',
+    summary: 'Dangerous pollution levels in major cities',
+    details: 'Industrial emissions and weather conditions have combined to create hazardous air quality in several European capitals. Sensitive groups should take precautions.',
     recommendations: [
-      'Require signatures for deliveries',
-      'Use package lockers if available',
-      'Install security cameras',
-      'Coordinate with neighbors to watch for deliveries'
+      'Limit outdoor activities',
+      'Use air purifiers if available',
+      'Wear masks when outside',
+      'Keep windows closed'
     ],
     color: 'purple',
-    icon: '📦'
+    icon: '🏭',
+    location: { lat: 50.0755, lng: 14.4378, intensity: 0.6 } // Prague, Czech Republic
+  },
+  {
+    id: '6',
+    title: 'Transport Disruptions',
+    summary: 'Major strikes affecting public transport',
+    details: 'Nationwide transport strikes are causing severe disruptions to rail and air travel across France and neighboring countries. Expect cancellations and delays.',
+    recommendations: [
+      'Check travel status before departing',
+      'Allow extra time for journeys',
+      'Consider alternative transport',
+      'Monitor strike updates'
+    ],
+    color: 'yellow',
+    icon: '🚆',
+    location: { lat: 45.7640, lng: 4.8357, intensity: 0.5 } // Lyon, France
+  },
+  {
+    id: '7',
+    title: 'Winter Storm Alert',
+    summary: 'Heavy snowfall expected in Scandinavia',
+    details: 'A major winter storm will bring heavy snow and strong winds to Norway, Sweden, and Finland. Travel will be extremely difficult in affected areas.',
+    recommendations: [
+      'Stock up on supplies',
+      'Avoid unnecessary travel',
+      'Prepare for possible power outages',
+      'Dress in warm layers'
+    ],
+    color: 'blue',
+    icon: '❄️',
+    location: { lat: 59.3293, lng: 18.0686, intensity: 0.7 } // Stockholm, Sweden
   }
 ];
 
@@ -93,6 +130,11 @@ export interface Card {
   recommendations: string[];
   color: 'yellow' | 'red' | 'blue' | 'green' | 'purple' | 'default';
   icon?: string;
+  location?: {
+    lat: number;
+    lng: number;
+    intensity?: number;
+  };
 }
 
 interface CardState {
