@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import WarningCard from './Modals/WarningCard';
 import WarningModal from './Modals/WarningModal';
 import { RootState } from '../../store';
-import { Card } from '../../redux/beAware/beAwareSlice';
 
 const BeAware = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,6 +56,7 @@ const BeAware = () => {
           isOpen={isModalOpen}
           warning={selectedWarning}
           onClose={closeModal}
+          allWarnings={warnings} // Pass all warnings to the modal
         />
       )}
     </div>

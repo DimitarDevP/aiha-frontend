@@ -10,7 +10,12 @@ export interface WarningDetails {
   details: string;
   recommendations: string[];
   color: CardColor;
-  icon?: React.ReactNode; // Made optional to match Card interface
+  icon?: React.ReactNode;
+  location?: {
+    lat: number;
+    lng: number;
+    intensity?: number;
+  };
 }
 
 export interface WarningsState {

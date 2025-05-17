@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -31,6 +31,7 @@ import Wrapper from './components/Wrapper';
 import UserInfo from './components/User/UserInfo';
 import BeAware from './components/BeAware/BeAware';
 import Home from './components/Home/Home';
+import { home, chatbubbles, alertCircle, person } from 'ionicons/icons';
 
 // Define RootState type
 interface RootState {
@@ -50,72 +51,79 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            {/* Tabs */}
-            <Route
-              exact
-              path="/Home"
-              render={() => (
-                <Wrapper>
-                  <Home />
-                </Wrapper>
-              )}
-            />
-            <Route
-              exact
-              path="/Be-Aware"
-              render={() => (
-                <Wrapper>
-                  <BeAware />
-                </Wrapper>
-              )}
-            />
-            <Route
-              exact
-              path="/Chat"
-              render={() => (
-                <Wrapper>
-                  <Tab2 />
-                </Wrapper>
-              )}
-            />
-            <Route
-              exact
-              path="/Profile"
-              render={() => (
-                <Wrapper>
-                  <UserInfo />
-                </Wrapper>
-              )}
-            />
-            {/* Auth routes with redirect when authenticated */}
-            <Route
-              exact
-              path="/login"
-              render={() => 
-                isAuthenticated ? (
-                  <Redirect to="/Home" />
-                ) : (
+            <Switch>
+              {/* Tabs */}
+              <Route
+                exact
+                path="/Home"
+                render={() => (
                   <Wrapper>
-                    <Login />
+                    <Home />
                   </Wrapper>
-                )
-              }
-            />
-            <Route
-              exact
-              path="/register"
-              render={() => 
-                isAuthenticated ? (
-                  <Redirect to="/Home" />
-                ) : (
+                )}
+              />
+              <Route
+                exact
+                path="/Be-Aware"
+                render={() => (
                   <Wrapper>
-                    <Register />
+                    <BeAware />
                   </Wrapper>
-                )
-              }
-            />
-            {/* Redirect root to tab1 */}
-            <Route exact path="/" render={() => <Redirect to="/Home" />} />
+                )}
+              />
+              <Route
+                exact
+                path="/Chat"
+                render={() => (
+                  <Wrapper>
+                    <Tab2 />
+                  </Wrapper>
+                )}
+              />
+              <Route
+                exact
+                path="/Profile"
+                render={() => (
+                  <Wrapper>
+                    <UserInfo />
+                  </Wrapper>
+                )}
+              />
+              
+              {/* Auth routes with redirect when authenticated */}
+              <Route
+                exact
+                path="/login"
+                render={() => 
+                  isAuthenticated ? (
+                    <Redirect to="/Home" />
+                  ) : (
+                    <Wrapper>
+                      <Login />
+                    </Wrapper>
+                  )
+                }
+              />
+              <Route
+                exact
+                path="/register"
+                render={() => 
+                  isAuthenticated ? (
+                    <Redirect to="/Home" />
+                  ) : (
+                    <Wrapper>
+                      <Register />
+                    </Wrapper>
+                  )
+                }
+              />
+              
+              {/* Redirect root to Home */}
+              <Route exact path="/" render={() => <Redirect to="/Home" />} />
+              
+              {/* Catch-all route for non-existent paths */}
+              <Route render={() => <Redirect to="/Home" />} />
+            </Switch>
           </IonRouterOutlet>
         </IonTabs>
       </IonReactRouter>
