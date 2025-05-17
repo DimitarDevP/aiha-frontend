@@ -76,7 +76,8 @@ function User() {
               onClick={() => setIsOpen(false)}
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
             >
-              <IonIcon icon={pulseOutline} className="mr-2 text-gray-500" />
+              <IonIcon icon={pulseOutline} 
+              className="mr-2 text-gray-500" />
               My Activity
             </NavLink>
 
@@ -85,7 +86,8 @@ function User() {
                 onClick={handleLogout}
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
               >
-                <IonIcon icon={logOutOutline} className="mr-2 text-gray-500" />
+                <IonIcon icon={logOutOutline} 
+                className="mr-2 text-gray-500" />
                 Log Out
               </button>
             )}
