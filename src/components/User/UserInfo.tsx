@@ -28,7 +28,7 @@ const UserProfileForm = () => {
   };
 
   return (
-    <div className="w-[60%] mx-auto p-6"> {/* 10% more width container */}
+    <div className="w-[100%] mx-auto p-6"> {/* 10% more width container */}
       <form 
         onSubmit={handleSubmit} 
         className="p-6 bg-white rounded-xl border-2 border-gray-200 shadow-md space-y-4" /* Added rounded-xl and border-2 */
