@@ -3,6 +3,37 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global scrollbar removal */
+html, body {
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ionic specific fixes */
+ion-app {
+  overflow: hidden;
+}
+
+ion-content {
+  --overflow: hidden;
+}
+
+ion-content::part(scroll) {
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+ion-content::part(scroll)::-webkit-scrollbar {
+  display: none;
+}
+
 /* Disclaimer Modal Styles */
 .disclaimer-modal {
     --width: 90%;

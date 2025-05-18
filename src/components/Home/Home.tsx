@@ -48,7 +48,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <main className="flex flex-col items-center py-4 md:py-6 px-4 w-full bg-indigo-50 min-h-screen">
+    <main className="flex flex-col items-center pt-8 pb-4 md:pt-16 md:pb-10 px-4 w-full bg-indigo-50 min-h-screen">
       <div className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-3xl">
         {cards.map((card) => (
           <div
