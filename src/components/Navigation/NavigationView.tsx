@@ -32,7 +32,7 @@ function NavigationView() {
         <img 
           src="static/logo.png"
           alt="App Logo" 
-          className="h-10 filter drop-shadow-lg"
+          className="h-10 w-10 rounded-full object-cover filter drop-shadow-lg"
         />
         {pageTitle && (
           <div className="flex flex-col">
