@@ -5,10 +5,10 @@ import { RootState } from '../../store';
 import { manualLogout } from '../../redux/userAuth/userAuthSlice';
 import About from '../About/About';
 import { 
-  personCircleOutline, 
+  personOutline, 
   logOutOutline, 
   homeOutline,
-  personOutline, 
+  personCircleOutline, 
   pulseOutline, 
   menuOutline,
   chatbubbleOutline,
@@ -42,7 +42,7 @@ function User() {
         <>
           <button
             onClick={() => history.push('/login')}
-            className="flex items-center space-x-1 bg-teal-500 hover:bg-teal-400 text-white px-3 py-1.5 rounded-lg shadow-md transition-all duration-200 text-sm"
+            className="flex items-center space-x-1 bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-400 hover:to-indigo-500 text-white px-3 py-1.5 rounded-lg shadow-md transition-all duration-200 text-sm font-medium"
           >
             <IonIcon icon={logInOutline} className="text-lg" />
             <span>Sign In</span>
@@ -50,27 +50,48 @@ function User() {
 
           <button
             onClick={toggleMenu}
-            className="w-9 h-9 bg-indigo-700 hover:bg-indigo-600 rounded-full flex items-center justify-center transition-all duration-200 shadow-md text-white"
+            className="w-9 h-9 bg-indigo-700 hover:bg-indigo-600 rounded-full flex items-center justify-center transition-all duration-200 shadow-md text-white relative"
           >
             <IonIcon icon={menuOutline} className="text-lg" />
+            {isAuthenticated && (
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-teal-400 rounded-full animate-pulse ring-2 ring-white"></div>
+            )}
           </button>
         </>
       )}
 
       {isAuthenticated && (
-        <div
-          onClick={toggleMenu}
-          className="w-9 h-9 bg-gradient-to-br from-teal-400 to-indigo-500 text-white rounded-full flex items-center justify-center cursor-pointer hover:shadow-md transition-all duration-200 border border-white"
-        >
-          <IonIcon icon={personCircleOutline} className="text-lg" />
+        <div className="relative">
+          <button
+            onClick={toggleMenu}
+            className="w-9 h-9 bg-gradient-to-br from-teal-400 to-indigo-500 text-white rounded-full flex items-center justify-center cursor-pointer hover:shadow-md transition-all duration-200 border border-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            {userName ? (
+              <span className="font-medium text-sm">
+                {userName.charAt(0).toUpperCase()}
+              </span>
+            ) : (
+              <IonIcon 
+                icon={personOutline} 
+                className="text-lg" 
+                aria-hidden="true"
+              />
+            )}
+          </button>
+          {isAuthenticated && (
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-teal-400 rounded-full animate-pulse ring-2 ring-white"></div>
+          )}
         </div>
       )}
 
       {isOpen && (
-        <div className="absolute right-0 top-11 w-56 bg-white backdrop-filter backdrop-blur-lg bg-opacity-95 rounded-xl shadow-xl z-[1000] ring-1 ring-indigo-100 focus:outline-none overflow-hidden border border-indigo-100">
+        <div className="absolute right-0 top-11 w-56 bg-white backdrop-filter backdrop-blur-lg bg-opacity-95 rounded-xl shadow-xl z-[1000] ring-1 ring-indigo-100 focus:outline-none overflow-hidden border border-white/20">
           <div className="flex justify-between items-center py-2 px-3 border-b border-indigo-100">
             <h3 className="text-indigo-900 font-medium text-sm">Space Health Navigator</h3>
-            <button onClick={() => setIsOpen(false)} className="text-gray-500 hover:text-indigo-600">
+            <button 
+              onClick={() => setIsOpen(false)} 
+              className="text-gray-500 hover:text-indigo-600 focus:outline-none"
+            >
               <IonIcon icon={closeOutline} className="text-lg" />
             </button>
           </div>
@@ -99,6 +120,9 @@ function User() {
                   <IonIcon icon={personOutline} className="text-base" />
                 </div>
                 <span>My Profile</span>
+                {isAuthenticated && (
+                  <div className="ml-auto w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
+                )}
               </NavLink>
             )}
             
