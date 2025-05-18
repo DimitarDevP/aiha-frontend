@@ -7,7 +7,7 @@ export interface ApiConfig {
 
 // Development configuration
 const devConfig: ApiConfig = {
-  baseUrl: 'http://127.0.0.1:5000/',
+  baseUrl: 'http://143.198.153.179/',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
