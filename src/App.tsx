@@ -34,6 +34,7 @@ import BeAware from './components/BeAware/BeAware';
 import Home from './components/Home/Home';
 import { home, chatbubbles, alertCircle, person } from 'ionicons/icons';
 import NewsCard from './components/NewsCard/NewsCard';
+import About from './components/About/About';
 
 // Define RootState type
 interface RootState {
@@ -109,6 +110,15 @@ const App: React.FC = () => {
               </Wrapper>
               )}
             />
+            <Route
+            exact
+            path="/about"
+            render={() => (
+              <Wrapper>
+                <About />
+              </Wrapper>
+            )}
+          />
             {/* Auth routes with redirect when authenticated */}
               <Route
                 exact

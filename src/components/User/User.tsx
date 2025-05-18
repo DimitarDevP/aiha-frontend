@@ -3,6 +3,7 @@ import { NavLink, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../store';
 import { manualLogout } from '../../redux/userAuth/userAuthSlice';
+import About from '../About/About';
 import { 
   personCircleOutline, 
   logOutOutline, 
@@ -14,7 +15,8 @@ import {
   alertCircleOutline,
   planetOutline,
   logInOutline,
-  closeOutline
+  closeOutline,
+  informationCircleOutline
 } from 'ionicons/icons';
 import { IonIcon } from '@ionic/react';
 
@@ -122,6 +124,17 @@ function User() {
                 <IonIcon icon={alertCircleOutline} className="text-base" />
               </div>
               <span>Be Aware</span>
+            </NavLink>
+            <NavLink
+              to="/about"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center px-3 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-800 w-full text-left transition-colors duration-200 text-sm"
+              activeClassName="bg-indigo-50 text-indigo-800"
+            >
+              <div className="bg-blue-100 p-1.5 rounded-lg mr-2 text-blue-600">
+                <IonIcon icon={informationCircleOutline} className="text-base" />
+              </div>
+              <span>About</span>
             </NavLink>
 
             {isAuthenticated && (
