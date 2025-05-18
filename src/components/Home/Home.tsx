@@ -48,7 +48,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <main className="flex flex-col items-center py-4 md:py-6 px-4 w-full bg-indigo-50 min-h-screen">
+    <main className="flex flex-col items-center pt-8 pb-4 md:pt-16 md:pb-10 px-4 w-full bg-indigo-50 min-h-screen">
       <div className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-3xl">
         {cards.map((card) => (
           <div
@@ -63,8 +63,8 @@ const Home: React.FC = () => {
             
             {/* Content area */}
             <div className="p-3 md:p-4 flex flex-col items-center text-center">
-              <h2 className="text-sm md:text-base font-semibold mb-1 text-indigo-900">{card.title}</h2>
-              <p className="text-xs text-indigo-600 line-clamp-2">{card.text}</p>
+              <h2 className="text-base md:text-lg font-semibold mb-1.5 text-indigo-900">{card.title}</h2>
+              <p className="text-md text-indigo-600 line-clamp-2">{card.text}</p> 
             </div>
           </div>
         ))}

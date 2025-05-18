@@ -1,47 +1,68 @@
-import { 
-  IonContent, 
-  IonHeader, 
-  IonPage, 
-  IonTitle, 
-  IonToolbar,
-  IonModal,
-  IonButton,
-  IonIcon,
-  IonButtons,
-  useIonViewDidEnter
+import {
+    IonContent,
+    IonHeader,
+    IonPage,
+    IonTitle,
+    IonToolbar,
+    IonModal,
+    IonButton,
+    IonIcon,
+    IonButtons,
+    useIonViewDidEnter,
+    IonFab,
+    IonFabButton
 } from '@ionic/react';
-import { informationCircle, close, send } from 'ionicons/icons';
+import { informationCircle, close, send, arrowDown } from 'ionicons/icons';
 import React, { useState, useEffect, useRef } from 'react';
 
+const get_token = () => {
+    let data = localStorage.getItem("persist:userAuth")
+    let token = JSON.parse(data).access_token.slice(1, -1)
+    return token
+}
+
 const Chatbot: React.FC = () => {
-    const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([
-        { text: 'Hello! How can I help you today?', isUser: false },
-    ]);
+    const [messages, setMessages] = useState<Array<any>>([]);
     const [inputText, setInputText] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [showDisclaimer, setShowDisclaimer] = useState(false);
+    const [isScrolledUp, setIsScrolledUp] = useState(false);
     const contentRef = useRef<HTMLIonContentElement>(null);
-
     useIonViewDidEnter(() => {
         setShowDisclaimer(true);
     });
 
+    useEffect(() => {
+        setIsLoading(true)
+        fetch("http://143.198.153.179/chat/send_message", { method: "POST", headers: { "Authorization": "Bearer " + get_token() } })
+            .then(res => res.json())
+            .then(data => {
+                setMessages([{ ...data, text: data.message, isUser: false }])
+                setIsLoading(false)
+            })
+    }, [])
+
     const handleSendMessage = () => {
         if (inputText.trim() === '') return;
-
-        const newMessages = [...messages, { text: inputText, isUser: true }];
-        setMessages(newMessages);
-        setInputText('');
         setIsLoading(true);
+        const data = new FormData()
+        data.append("thread_id", messages[0].thread_id)
+        data.append("message", inputText)
+        setMessages([...messages, { text: inputText, isUser: true }])
+        fetch("http://143.198.153.179/chat/send_message", {
+            "method": "POST",
+            "body": data,
+            "headers": { "Authorization": "Bearer " + get_token() }
+        })
+            .then(res => res.json())
+            .then(data => {
+                setMessages([...messages, { text: inputText, isUser: true }, { ...data, text: data.message, isUser: false }])
+                setIsLoading(false);
+            })
+        setInputText('');
 
-        setTimeout(() => {
-            setMessages([...newMessages, { 
-                text: 'Based on the air quality data, it\'s safe to jog today!', 
-                isUser: false 
-            }]);
-            setIsLoading(false);
-        }, 2000);
     };
+    console.log(messages)
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputText(e.target.value);
@@ -57,19 +78,31 @@ const Chatbot: React.FC = () => {
         setShowDisclaimer(false);
     };
 
+    const handleScroll = async (event: CustomEvent) => {
+        if (!contentRef.current) return;
+        
+        const scrollElement = await contentRef.current.getScrollElement();
+        const { scrollTop, scrollHeight, clientHeight } = scrollElement;
+        
+        // Check if user has scrolled up (not at the bottom)
+        const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
+        setIsScrolledUp(!isAtBottom);
+    };
+    
+    const scrollToBottom = async () => {
+        if (contentRef.current) {
+            await contentRef.current.scrollToBottom(300);
+        }
+    };
+    
     useEffect(() => {
-        const scrollToBottom = async () => {
-            if (contentRef.current) {
-                await contentRef.current.scrollToBottom(300);
-            }
-        };
         scrollToBottom();
     }, [messages]);
 
     return (
         <IonPage>
             {/* Disclaimer Modal */}
-            <IonModal 
+            <IonModal
                 isOpen={showDisclaimer}
                 onDidDismiss={handleCloseDisclaimer}
                 className="disclaimer-modal"
@@ -81,12 +114,12 @@ const Chatbot: React.FC = () => {
                     </div>
                     <h2 className="text-xl font-bold mb-4 text-indigo-900">Important Notice</h2>
                     <p className="mb-6 text-indigo-700">
-                        You're talking to an AI health assistant. This is not a substitute 
-                        for professional medical advice. Always consult with your physician 
+                        You're talking to an AI health assistant. This is not a substitute
+                        for professional medical advice. Always consult with your physician
                         before making any health-related decisions.
                     </p>
-                    <IonButton 
-                        expand="block" 
+                    <IonButton
+                        expand="block"
                         onClick={handleCloseDisclaimer}
                         className="mx-auto max-w-xs bg-indigo-600 hover:bg-indigo-700"
                     >
@@ -99,8 +132,8 @@ const Chatbot: React.FC = () => {
                 <IonToolbar>
                     <IonTitle className="text-white">AI Health Assistant</IonTitle>
                     <IonButtons slot="end">
-                        <IonButton 
-                            fill="clear" 
+                        <IonButton
+                            fill="clear"
                             onClick={() => setShowDisclaimer(true)}
                             title="Show Disclaimer"
                             className="text-white hover:text-indigo-100"
@@ -110,19 +143,24 @@ const Chatbot: React.FC = () => {
                     </IonButtons>
                 </IonToolbar>
             </IonHeader>
-            
-            <IonContent ref={contentRef} fullscreen className="flex flex-col bg-indigo-50">
+
+            <IonContent 
+                ref={contentRef} 
+                fullscreen 
+                className="flex flex-col bg-indigo-50"
+                scrollEvents={true}
+                onIonScroll={handleScroll}
+            >
                 <div className="flex-1 overflow-y-auto p-4 pt-8 space-y-4">
                     {messages.map((message, index) => (
                         <div
+                            dangerouslySetInnerHTML={{ __html: message.text }}
                             key={index}
-                            className={`p-3 rounded-xl max-w-xs ${
-                                message.isUser
-                                    ? 'bg-indigo-600 text-white self-end ml-auto'
-                                    : 'bg-white text-indigo-800 self-start mr-auto border border-indigo-100'
-                            }`}
+                            className={`p-3 rounded-xl max-w-xs ${message.isUser
+                                ? 'bg-indigo-600 text-white self-end ml-auto'
+                                : 'bg-white text-indigo-800 self-start mr-auto border border-indigo-100'
+                                }`}
                         >
-                            {message.text}
                         </div>
                     ))}
                     {isLoading && (
@@ -133,8 +171,19 @@ const Chatbot: React.FC = () => {
                         </div>
                     )}
                 </div>
+                
+                {isScrolledUp && (
+                    <IonFab vertical="bottom" horizontal="end" slot="fixed" className="mb-4 mr-6 animate-bounce">
+                        <IonFabButton 
+                            onClick={scrollToBottom} 
+                            className="bg-indigo-600 hover:bg-indigo-700 rounded-full w-15 h-15 flex items-center justify-center"
+                        >
+                            <IonIcon icon={arrowDown} className="text-xl" />
+                        </IonFabButton>
+                    </IonFab>
+                )}
             </IonContent>
-            
+
             <div className="sticky bottom-0 p-4 flex items-center gap-2 bg-white border-t border-indigo-100">
                 <input
                     type="text"
