@@ -63,8 +63,8 @@ const Home: React.FC = () => {
             
             {/* Content area */}
             <div className="p-3 md:p-4 flex flex-col items-center text-center">
-              <h2 className="text-sm md:text-base font-semibold mb-1 text-indigo-900">{card.title}</h2>
-              <p className="text-xs text-indigo-600 line-clamp-2">{card.text}</p>
+              <h2 className="text-base md:text-lg font-semibold mb-1.5 text-indigo-900">{card.title}</h2>
+              <p className="text-md text-indigo-600 line-clamp-2">{card.text}</p> 
             </div>
           </div>
         ))}
