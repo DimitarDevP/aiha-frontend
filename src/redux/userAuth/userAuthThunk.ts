@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import { RootState } from "../../store";
-import { apiConfig, getApiUrl } from "../../constants";
+import { apiConfig } from "../../constants";
 
 interface LoginCredentials {
   email: string;

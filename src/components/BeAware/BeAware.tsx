@@ -1,19 +1,40 @@
-// components/BeAware.tsx
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import WarningCard from './Modals/WarningCard';
 import WarningModal from './Modals/WarningModal';
 import { RootState } from '../../store';
 import { IonIcon } from '@ionic/react';
 import { alertCircleOutline, filterOutline, informationCircleOutline } from 'ionicons/icons';
+import { fetchCards } from '../../redux/beAware/beAwareThunk';
+import { AppDispatch } from '../../store';
 
 const BeAware = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedWarningId, setSelectedWarningId] = useState<string | null>(null);
   const [filter, setFilter] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
   
   const warnings = useSelector((state: RootState) => state.card.warnings);
+  const status = useSelector((state: RootState) => state.card.status);
+  const error = useSelector((state: RootState) => state.card.error);
   const selectedWarning = warnings.find(warning => warning.id === selectedWarningId) || null;
+
+  // Fetch data on component mount
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        await dispatch(fetchCards());
+      } catch (err) {
+        console.error('Failed to fetch warnings:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadData();
+  }, [dispatch]);
 
   const filteredWarnings = filter === 'all' 
     ? warnings 
@@ -43,6 +64,32 @@ const BeAware = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isModalOpen]);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 mb-8">
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 mb-8">
+        <div className="bg-red-50 p-4 rounded-xl border border-red-100 flex items-start space-x-3">
+          <div className="text-red-600 mt-1">
+            <IonIcon icon={alertCircleOutline} className="text-xl" />
+          </div>
+          <div>
+            <h3 className="text-red-800 font-medium">Error loading alerts</h3>
+            <p className="text-red-700">{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 mb-8">
@@ -87,7 +134,11 @@ const BeAware = () => {
             <IonIcon icon={alertCircleOutline} />
           </div>
           <h3 className="text-xl font-medium text-gray-700 mb-2">No Alerts Found</h3>
-          <p className="text-gray-500">There are currently no health alerts matching your selected filter.</p>
+          <p className="text-gray-500">
+            {filter === 'all' 
+              ? 'There are currently no health alerts available.' 
+              : 'There are no alerts matching your selected filter.'}
+          </p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -106,7 +157,7 @@ const BeAware = () => {
           isOpen={isModalOpen}
           warning={selectedWarning}
           onClose={closeModal}
-          allWarnings={warnings} // Pass all warnings to the modal
+          allWarnings={warnings}
         />
       )}
     </div>

@@ -17,7 +17,7 @@ const devConfig: ApiConfig = {
 
 // Production configuration
 const prodConfig: ApiConfig = {
-  baseUrl: 'https://your-production-api.com/',
+  baseUrl: 'http://143.198.153.179/',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

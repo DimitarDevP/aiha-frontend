@@ -1,4 +1,3 @@
-// beAwareSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import persistReducer from "redux-persist/es/persistReducer";
 import storage from "redux-persist/lib/storage";
@@ -12,118 +11,119 @@ import {
 
 type CardStatus = 'idle' | 'loading' | 'succeeded' | 'failed';
 
+// Define initial mock cards for air quality alerts with proper European locations
 const mockCards: Card[] = [
   {
     id: '1',
-    title: 'Severe Storm Warning',
-    summary: 'Heavy thunderstorms expected across Western Europe',
-    details: 'A severe thunderstorm system is moving across Western Europe, bringing heavy rain, strong winds up to 80 km/h, and possible hail. The worst affected areas will be northern France and Benelux countries.',
+    title: 'Carbon Monoxide Alert',
+    summary: 'High levels of carbon monoxide detected in central Paris',
+    details: 'Carbon monoxide levels have reached dangerous levels in central Paris. Sensitive groups should take precautions.',
     recommendations: [
-      'Avoid unnecessary travel',
-      'Secure outdoor objects',
-      'Stay away from windows during storms',
-      'Monitor local weather alerts'
+      'Stay indoors when possible',
+      'Use air purifiers if available',
+      'Limit outdoor exercise',
+      'Seek medical attention if experiencing symptoms'
     ],
     color: 'red',
-    icon: '⚠️',
-    location: { lat: 48.8566, lng: 2.3522, intensity: 0.9 }, // Paris, France
-    date: '2023-06-15T14:30:00Z'
+    icon: '💨',
+    location: { lat: 48.8566, lng: 2.3522, intensity: 0.6 }, // Paris, France
+    date: '2025-05-18T09:30:00Z'
   },
   {
     id: '2',
-    title: 'Heatwave Advisory',
-    summary: 'Extreme temperatures in Southern Europe',
-    details: 'A prolonged heatwave is affecting Southern Europe with temperatures expected to reach 40°C in some areas. The heatwave will particularly impact Spain, Italy, and Greece.',
+    title: 'Air Quality Warning',
+    summary: 'Moderate air pollution levels in Rome',
+    details: 'Air quality index shows moderate pollution levels across Rome. CO levels are elevated but below dangerous thresholds.',
     recommendations: [
-      'Stay hydrated',
-      'Avoid outdoor activities during peak hours',
-      'Check on vulnerable neighbors',
-      'Use sun protection'
+      'Consider limiting prolonged outdoor exposure',
+      'Keep windows closed during peak traffic hours',
+      'Monitor symptoms if you have respiratory conditions',
+      'Check air quality updates regularly'
     ],
     color: 'yellow',
-    icon: '🌡️',
-    location: { lat: 41.9028, lng: 12.4964, intensity: 0.7 }, // Rome, Italy
-    date: '2023-07-22T10:15:00Z'
+    icon: '🌬️',
+    location: { lat: 41.9028, lng: 12.4964, intensity: 0.6 }, // Rome, Italy
+    date: '2025-05-17T14:15:00Z'
   },
   {
     id: '3',
-    title: 'Flood Warning',
-    summary: 'River flooding expected in Central Europe',
-    details: 'Heavy rainfall has caused rivers to rise to dangerous levels in Germany, Austria, and Switzerland. Flooding is expected in low-lying areas along major river systems.',
+    title: 'Low Air Pollution Day',
+    summary: 'Good air quality reported across Berlin',
+    details: 'Air quality measurements show low pollution levels in Berlin today. Carbon monoxide levels are well within safe limits.',
     recommendations: [
-      'Avoid flood-prone areas',
-      'Prepare sandbags if in risk zone',
-      'Have emergency supplies ready',
-      'Follow evacuation orders if issued'
+      'Enjoy outdoor activities as normal',
+      'A good day for outdoor exercise',
+      'No special precautions needed',
+      'Perfect weather for ventilating indoor spaces'
     ],
     color: 'blue',
-    icon: '🌊',
-    location: { lat: 52.5200, lng: 13.4050, intensity: 0.8 }, // Berlin, Germany
-    date: '2023-05-08T08:45:00Z'
+    icon: '✅',
+    location: { lat: 52.5200, lng: 13.4050, intensity: 0.6 }, // Berlin, Germany
+    date: '2025-05-18T08:45:00Z'
   },
   {
     id: '4',
-    title: 'Forest Fire Alert',
-    summary: 'High risk of wildfires in Mediterranean region',
-    details: 'Dry conditions and high temperatures have created extreme fire risk in Portugal, Spain, and southern France. Several fires are already burning out of control.',
+    title: 'Carbon Monoxide Danger',
+    summary: 'Elevated CO levels in industrial areas of Madrid',
+    details: 'Monitoring stations have detected dangerous carbon monoxide concentrations near Madrid\'s industrial districts.',
     recommendations: [
-      'Avoid outdoor burning',
-      'Report any signs of fire immediately',
-      'Prepare evacuation plans',
-      'Follow local authority instructions'
+      'Avoid industrial zones until levels decrease',
+      'Keep children and elderly indoors',
+      'Use air purifiers if available',
+      'Report symptoms like headache, dizziness, or nausea immediately'
     ],
     color: 'red',
-    icon: '🔥',
-    location: { lat: 38.7223, lng: -9.1393, intensity: 0.95 }, // Lisbon, Portugal
-    date: '2023-08-03T16:20:00Z'
+    icon: '⚠️',
+    location: { lat: 40.4168, lng: -3.7038, intensity: 0.6 }, // Madrid, Spain
+    date: '2025-05-18T07:20:00Z'
   },
   {
     id: '5',
-    title: 'Air Quality Warning',
-    summary: 'Dangerous pollution levels in major cities',
-    details: 'Industrial emissions and weather conditions have combined to create hazardous air quality in several European capitals. Sensitive groups should take precautions.',
+    title: 'Air Quality Alert',
+    summary: 'General air quality warning for Prague',
+    details: 'Multiple pollutants including carbon monoxide have reached moderate levels in Prague due to temperature inversion.',
     recommendations: [
-      'Limit outdoor activities',
-      'Use air purifiers if available',
-      'Wear masks when outside',
-      'Keep windows closed'
+      'Sensitive groups should limit outdoor exposure',
+      'Use air purifiers indoors',
+      'Close windows during morning and evening hours',
+      'Follow updates from local environmental agencies'
     ],
-    color: 'purple',
+    color: 'yellow',
     icon: '🏭',
     location: { lat: 50.0755, lng: 14.4378, intensity: 0.6 }, // Prague, Czech Republic
-    date: '2023-04-12T11:10:00Z'
+    date: '2025-05-17T16:10:00Z'
   },
   {
     id: '6',
-    title: 'Transport Disruptions',
-    summary: 'Major strikes affecting public transport',
-    details: 'Nationwide transport strikes are causing severe disruptions to rail and air travel across France and neighboring countries. Expect cancellations and delays.',
+    title: 'Air Quality Advisory',
+    summary: 'Slight pollution increase in Stockholm',
+    details: 'Minor elevation in air pollutants including CO detected in Stockholm city center. Levels remain within safe limits.',
     recommendations: [
-      'Check travel status before departing',
-      'Allow extra time for journeys',
-      'Consider alternative transport',
-      'Monitor strike updates'
+      'No special precautions needed for general population',
+      'Individuals with severe respiratory conditions may wish to limit prolonged outdoor activity',
+      'Regular monitoring recommended',
+      'Check local air quality index before planning extensive outdoor events'
     ],
-    color: 'yellow',
-    icon: '🚆',
-    location: { lat: 45.7640, lng: 4.8357, intensity: 0.5 }, // Lyon, France
-    date: '2023-09-19T07:30:00Z'
+    color: 'blue',
+    icon: '📊',
+    location: { lat: 59.3293, lng: 18.0686, intensity: 0.6 }, // Stockholm, Sweden
+    date: '2025-05-18T10:30:00Z'
   },
   {
     id: '7',
-    title: 'Winter Storm Alert',
-    summary: 'Heavy snowfall expected in Scandinavia',
-    details: 'A major winter storm will bring heavy snow and strong winds to Norway, Sweden, and Finland. Travel will be extremely difficult in affected areas.',
+    title: 'Data Collection Issue',
+    summary: 'CO monitoring systems offline in London',
+    details: 'Carbon monoxide monitoring equipment is currently undergoing maintenance in Greater London. Data unavailable until systems are restored.',
     recommendations: [
-      'Stock up on supplies',
-      'Avoid unnecessary travel',
-      'Prepare for possible power outages',
-      'Dress in warm layers'
+      'Follow standard air quality precautions',
+      'Report any unusual smells or symptoms',
+      'Check alternative monitoring sources if concerned',
+      'System expected to be back online by tomorrow'
     ],
-    color: 'blue',
-    icon: '❄️',
-    location: { lat: 59.3293, lng: 18.0686, intensity: 0.7 }, // Stockholm, Sweden
-    date: '2023-12-05T13:45:00Z'
+    color: 'default',
+    icon: '❓',
+    location: { lat: 51.5074, lng: -0.1278, intensity: 0.6 }, // London, UK
+    date: '2025-05-18T11:45:00Z'
   }
 ];
 
@@ -139,6 +139,7 @@ export interface Card {
     lat: number;
     lng: number;
     intensity?: number;
+    city?: string;
   };
   date?: string; // ISO 8601 date string
 }
@@ -187,6 +188,7 @@ const cardSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Create card cases
       .addCase(createCard.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -200,18 +202,23 @@ const cardSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload as string;
       })
+      
+      // Fetch all cards cases
       .addCase(fetchCards.pending, (state) => {
         state.status = 'loading';
         state.error = null;
       })
       .addCase(fetchCards.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        // Ensure we handle the structure of the new air quality data
         state.warnings = action.payload;
       })
       .addCase(fetchCards.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
       })
+      
+      // Fetch card by ID cases
       .addCase(fetchCardById.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -224,6 +231,8 @@ const cardSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload as string;
       })
+      
+      // Update card cases
       .addCase(updateCard.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -242,6 +251,8 @@ const cardSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload as string;
       })
+      
+      // Delete card cases
       .addCase(deleteCard.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -260,6 +271,7 @@ const cardSlice = createSlice({
   }
 });
 
+// Configure Redux persistence
 const persistConfig = {
   key: 'cards',
   storage,
