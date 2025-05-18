@@ -247,14 +247,13 @@ const UserProfileForm = () => {
 
         <div className="space-y-2">
           <label className="flex items-center space-x-2 text-sm font-medium text-indigo-800">
-            <IonIcon icon={flaskOutline} className="text-indigo-600" />
-            <span>Substance Use</span>
+            <span>Aditional info</span>
           </label>
           <textarea
-            name="addictions"
+            name="description"
             value={formData.addictions}
             onChange={handleChange}
-            placeholder="Information about tobacco, alcohol, or other substance use..."
+            placeholder="Describe any additional information about your health..."
             className="w-full border-2 p-3 rounded-xl border-indigo-100 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-all min-h-24"
           />
         </div>
