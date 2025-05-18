@@ -220,15 +220,8 @@ const WarningModal: React.FC<WarningModalProps> = ({
         </div>
         
         {/* Footer section with action buttons */}
-        <div className="p-6 border-t border-gray-200 bg-gray-50">
-          <div className="flex flex-col sm:flex-row justify-end gap-3">
-            <button 
-              className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-100 transition-colors"
-              onClick={onClose}
-            >
-              Close
-            </button>
-          </div>
+        <div className="p-6 pt-[0px] border-t border-gray-200 bg-gray-50">
+
         </div>
       </div>
     </div>

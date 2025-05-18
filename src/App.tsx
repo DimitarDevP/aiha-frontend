@@ -32,7 +32,6 @@ import Wrapper from './components/Wrapper';
 import UserInfo from './components/User/UserInfo';
 import BeAware from './components/BeAware/BeAware';
 import Home from './components/Home/Home';
-import { home, chatbubbles, alertCircle, person } from 'ionicons/icons';
 import NewsCard from './components/NewsCard/NewsCard';
 
 // Define RootState type
