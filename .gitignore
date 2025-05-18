@@ -34,3 +34,4 @@ yarn-error.log*
 # Mobile development folders
 /android
 /ios
+/build
