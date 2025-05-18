@@ -1,0 +1,9 @@
+{
+  "name": "aiha-frontend",  
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "vite": true,             
+  "id": "com.example.app"  
+}
